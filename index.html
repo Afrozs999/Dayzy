@@ -2,17 +2,24 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#4f46e5">
 <title>DayZy</title>
-<link rel="icon" type="image/png" href="https://i.ibb.co/xS57LdJY/Chat-GPT-Image-Mar-3-2026-03-02-55-PM-Photoroom.png">
+<link rel="icon" href="https://i.ibb.co/xS57LdJY/Chat-GPT-Image-Mar-3-2026-03-02-55-PM-Photoroom.png">
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Poppins:wght@700;800&display=swap" rel="stylesheet">
 <style>
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
-html,body{width:100%;height:100%;overflow:hidden;font-family:'Nunito',sans-serif}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
 
 :root{
-  --bg:#f0f2ff;--sur:#ffffff;--sur2:#f4f6ff;--bdr:#e5e7eb;
-  --txt:#1a1340;--sub:#6b7280;
+  --pt:env(safe-area-inset-top,0px);
+  --pb:env(safe-area-inset-bottom,0px);
+  --pl2:env(safe-area-inset-left,0px);
+  --pr:env(safe-area-inset-right,0px);
+  --sur:#fff;--sur2:#f4f6ff;--bdr:#e8eaf0;
+  --txt:#1a1340;--sub:#8891a8;
   --p:#4f46e5;--pl:#818cf8;--pdim:#eef2ff;
   --green:#10b981;--gbg:#d1fae5;
   --red:#ef4444;--rbg:#fee2e2;
@@ -21,13 +28,12 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Nunito',sans-serif
   --purple:#8b5cf6;--pubg:#ede9fe;
   --pink:#ec4899;--pkbg:#fce7f3;
   --teal:#14b8a6;--tbg:#ccfbf1;
-  --sh:0 4px 20px rgba(79,70,229,.12);
-  --shsm:0 2px 8px rgba(0,0,0,.06);
-  --r:16px;
+  --shsm:0 2px 12px rgba(0,0,0,.07);
+  --sh:0 4px 24px rgba(79,70,229,.13);
 }
 [data-theme=dark]{
-  --bg:#0f0e1a;--sur:#1a1830;--sur2:#221f38;--bdr:#2d2b45;
-  --txt:#f0eeff;--sub:#9b99b8;
+  --sur:#16142a;--sur2:#1e1c35;--bdr:#2a2847;
+  --txt:#eeeaff;--sub:#7b79a0;
   --p:#818cf8;--pl:#a5b4fc;--pdim:#1e1c3a;
   --green:#34d399;--gbg:#064e3b;
   --red:#f87171;--rbg:#450a0a;
@@ -36,6 +42,7 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Nunito',sans-serif
   --purple:#a78bfa;--pubg:#2e1065;
   --pink:#f472b6;--pkbg:#500724;
   --teal:#2dd4bf;--tbg:#042f2e;
+  --shsm:0 2px 12px rgba(0,0,0,.3);
 }
 [data-accent=green]{--p:#10b981;--pl:#34d399;--pdim:#d1fae5}
 [data-accent=orange]{--p:#f59e0b;--pl:#fbbf24;--pdim:#fef3c7}
@@ -44,399 +51,589 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Nunito',sans-serif
 [data-accent=purple]{--p:#8b5cf6;--pl:#a78bfa;--pdim:#ede9fe}
 [data-accent=red]{--p:#ef4444;--pl:#f87171;--pdim:#fee2e2}
 
-/* ===== APP SHELL ===== */
-#app{position:fixed;inset:0;background:var(--sur);display:flex;flex-direction:column;transition:background .3s}
+html{height:100%;height:-webkit-fill-available}
+body{height:100%;height:-webkit-fill-available;overflow:hidden;font-family:'Nunito',sans-serif;background:var(--sur)}
 
-/* ===== SCREENS ===== */
-.scr{display:none;flex-direction:column;position:absolute;inset:0;background:var(--sur);animation:fadeIn .25s ease}
-.scr.on{display:flex}
-@keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
-.sarea{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch}
-.sarea::-webkit-scrollbar{display:none}
+/* ── APP SHELL ── */
+#app{
+  position:fixed;top:0;left:0;right:0;bottom:0;
+  padding-top:var(--pt);
+  padding-bottom:var(--pb);
+  padding-left:var(--pl2);
+  padding-right:var(--pr);
+  background:var(--sur);
+  display:flex;flex-direction:column;
+}
 
-/* ===== STATUS BAR ===== */
-.sbar{padding:12px 20px 0;display:flex;justify-content:space-between;align-items:center;flex-shrink:0;background:var(--sur)}
-.sbar-t{font-weight:800;font-size:14px;color:var(--txt)}
-.sbar-i{font-size:12px;color:var(--sub)}
+/* ── SCREENS ── */
+.scr{
+  display:none;flex-direction:column;
+  position:absolute;
+  top:var(--pt);left:var(--pl2);right:var(--pr);bottom:var(--pb);
+  background:var(--sur);
+  overflow:hidden;
+}
+.scr.on{display:flex;animation:fadeUp .22s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 
-/* ===== BOTTOM NAV ===== */
-.bnav{background:var(--sur);padding:6px 10px 20px;display:flex;justify-content:space-around;border-top:1px solid var(--bdr);flex-shrink:0}
-.nb{display:flex;flex-direction:column;align-items:center;gap:2px;background:none;border:none;cursor:pointer;font-size:9px;font-weight:700;color:var(--sub);font-family:'Nunito',sans-serif;padding:6px 8px;border-radius:10px;transition:all .2s;min-width:52px}
-.nb svg{width:20px;height:20px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+/* ── SCROLL AREA ── */
+.sa{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain}
+.sa::-webkit-scrollbar{display:none}
+
+/* ── STATUS BAR ── */
+.sb{padding:14px 20px 4px;display:flex;justify-content:space-between;align-items:center;flex-shrink:0}
+.sb-t{font-weight:800;font-size:15px;color:var(--txt)}
+.sb-i{font-size:12px;color:var(--sub);letter-spacing:-.3px}
+
+/* ── BOTTOM NAV ── */
+.bnav{
+  background:var(--sur);
+  padding:8px 8px calc(10px + var(--pb));
+  display:flex;justify-content:space-around;
+  border-top:1px solid var(--bdr);
+  flex-shrink:0;
+}
+.nb{
+  display:flex;flex-direction:column;align-items:center;gap:3px;
+  background:none;border:none;cursor:pointer;
+  font-size:9px;font-weight:700;color:var(--sub);
+  font-family:'Nunito',sans-serif;
+  padding:7px 10px;border-radius:12px;transition:all .18s;min-width:54px;
+}
+.nb svg{width:22px;height:22px;stroke:currentColor;fill:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
 .nb.on{color:var(--p);background:var(--pdim)}
 
-/* ===== PIN SCREEN ===== */
-#pinScr{background:var(--sur);align-items:center;justify-content:center;gap:0;padding:32px 24px}
-.pin-logo{font-family:'Poppins',sans-serif;font-size:30px;font-weight:800;color:var(--p)}
-.pin-logo span{color:var(--orange)}
-.pin-sub{color:var(--sub);font-size:13px;margin-bottom:32px;text-align:center}
-.pin-dots{display:flex;gap:14px;margin-bottom:20px}
-.pd{width:16px;height:16px;border-radius:50%;border:2px solid var(--p);background:transparent;transition:all .2s}
-.pd.fill{background:var(--p);transform:scale(1.1)}
-.pin-err{color:var(--red);font-size:13px;font-weight:700;margin-bottom:10px;min-height:18px;text-align:center}
-.pin-pad{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;width:230px}
-.pk{height:60px;border-radius:14px;background:var(--sur2);border:2px solid var(--bdr);font-size:20px;font-weight:800;color:var(--txt);cursor:pointer;font-family:'Nunito',sans-serif;transition:all .15s}
-.pk:active{transform:scale(.94);background:var(--pdim);border-color:var(--p);color:var(--p)}
+/* ══════════════════════════════
+   WELCOME / SETUP PIN SCREENS
+══════════════════════════════ */
+#welcomeScr{
+  background:linear-gradient(155deg,#4f46e5 0%,#7c3aed 50%,#a855f7 100%);
+  align-items:center;justify-content:center;
+  padding:40px 28px;gap:0;
+}
+.wlc-logo{display:flex;align-items:center;gap:12px;margin-bottom:10px}
+.wlc-logo img{width:60px;height:60px;object-fit:contain;border-radius:18px;background:rgba(255,255,255,.18);padding:6px;box-shadow:0 8px 24px rgba(0,0,0,.2)}
+.wlc-logo span{font-family:'Poppins',sans-serif;font-size:36px;font-weight:800;color:#fff;letter-spacing:-1px}
+.wlc-tag{color:rgba(255,255,255,.75);font-size:14px;margin-bottom:48px;text-align:center;line-height:1.5}
+.wlc-btn{width:100%;max-width:280px;padding:16px;background:#fff;color:var(--p);border:none;border-radius:16px;font-family:'Nunito',sans-serif;font-size:16px;font-weight:800;cursor:pointer;box-shadow:0 8px 24px rgba(0,0,0,.2);margin-bottom:14px;transition:all .2s}
+.wlc-btn:active{transform:scale(.97)}
+.wlc-skip{color:rgba(255,255,255,.6);font-size:13px;cursor:pointer;text-decoration:underline;margin-top:4px}
+
+#setPinScr{
+  background:linear-gradient(155deg,#4f46e5 0%,#7c3aed 60%,#a855f7 100%);
+  align-items:center;justify-content:center;
+  padding:32px 24px;gap:0;
+}
+.sp-badge{background:rgba(255,255,255,.18);border-radius:20px;padding:5px 16px;color:#fff;font-size:11px;font-weight:700;letter-spacing:.8px;margin-bottom:16px}
+.sp-title{font-size:22px;font-weight:800;color:#fff;margin-bottom:6px;text-align:center}
+.sp-sub{font-size:13px;color:rgba(255,255,255,.7);margin-bottom:32px;text-align:center;line-height:1.5}
+.sp-dots{display:flex;gap:16px;margin-bottom:20px}
+.spd{width:18px;height:18px;border-radius:50%;border:2.5px solid rgba(255,255,255,.5);background:transparent;transition:all .2s}
+.spd.on{background:#fff;border-color:#fff;transform:scale(1.15)}
+.sp-err{color:#fde68a;font-size:13px;font-weight:700;margin-bottom:8px;min-height:20px;text-align:center}
+.sp-pad{display:grid;grid-template-columns:repeat(3,1fr);gap:11px;width:248px}
+.spk{
+  height:64px;border-radius:16px;
+  background:rgba(255,255,255,.15);
+  border:1.5px solid rgba(255,255,255,.22);
+  font-size:22px;font-weight:800;color:#fff;
+  cursor:pointer;font-family:'Nunito',sans-serif;
+  transition:all .15s;backdrop-filter:blur(6px);
+  display:flex;align-items:center;justify-content:center;
+}
+.spk:active{background:rgba(255,255,255,.32);transform:scale(.93)}
+.spk.del{background:rgba(239,68,68,.25);border-color:rgba(239,68,68,.35);font-size:18px}
+.sp-hint{color:rgba(255,255,255,.5);font-size:11px;margin-top:20px;text-align:center;line-height:1.6}
+
+/* ── ENTER PIN SCREEN ── */
+#pinScr{
+  background:var(--sur);
+  align-items:center;justify-content:center;
+  padding:32px 24px;gap:0;
+}
+.pin-top{display:flex;align-items:center;gap:10px;margin-bottom:8px}
+.pin-top img{width:44px;height:44px;object-fit:contain;border-radius:12px;box-shadow:0 3px 12px rgba(79,70,229,.22)}
+.pin-logo{font-family:'Poppins',sans-serif;font-size:28px;font-weight:800;color:var(--p)}
+.pin-logo span{color:#f59e0b}
+.pin-sub{color:var(--sub);font-size:13px;margin-bottom:36px;text-align:center}
+.pin-dots{display:flex;gap:16px;margin-bottom:20px}
+.pd{width:18px;height:18px;border-radius:50%;border:2.5px solid var(--p);background:transparent;transition:all .2s}
+.pd.on{background:var(--p);transform:scale(1.15)}
+.pin-err{color:var(--red);font-size:13px;font-weight:700;margin-bottom:8px;min-height:20px;text-align:center}
+.pin-pad{display:grid;grid-template-columns:repeat(3,1fr);gap:11px;width:248px}
+.pk{
+  height:64px;border-radius:16px;
+  background:var(--sur2);border:1.5px solid var(--bdr);
+  font-size:22px;font-weight:800;color:var(--txt);
+  cursor:pointer;font-family:'Nunito',sans-serif;
+  transition:all .15s;
+  display:flex;align-items:center;justify-content:center;
+}
+.pk:active{background:var(--pdim);border-color:var(--p);color:var(--p);transform:scale(.93)}
 .pk.del{background:var(--rbg);color:var(--red);border-color:var(--rbg)}
-.pin-skip{margin-top:18px;color:var(--sub);font-size:12px;cursor:pointer;text-decoration:underline}
+.pin-skip{margin-top:20px;color:var(--sub);font-size:12px;cursor:pointer;text-decoration:underline}
 
-/* ===== HOME ===== */
-.page-hdr{padding:6px 20px 12px;background:var(--sur);flex-shrink:0}
-.greet-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:2px}
-.greeting{font-size:20px;font-weight:900;color:var(--txt)}
-.sub-greet{font-size:12px;color:var(--sub);margin-bottom:10px}
-.av-btn{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,var(--p),var(--pl));display:flex;align-items:center;justify-content:center;color:#fff;cursor:pointer;font-weight:800;box-shadow:var(--shsm);border:none;overflow:hidden;flex-shrink:0}
-.av-btn img{width:100%;height:100%;object-fit:contain;padding:4px}
-.search-bar{display:flex;align-items:center;gap:8px;background:var(--sur2);border-radius:12px;padding:10px 14px;border:2px solid var(--bdr)}
-.search-bar:focus-within{border-color:var(--p)}
-.search-bar input{border:none;background:none;flex:1;font-family:'Nunito',sans-serif;font-size:13px;color:var(--txt);outline:none}
-.search-bar input::placeholder{color:var(--sub)}
+/* ══════════════════════════════
+   HOME SCREEN
+══════════════════════════════ */
+.phdr{padding:4px 20px 12px;background:var(--sur);flex-shrink:0}
+.grow{display:flex;justify-content:space-between;align-items:center;margin-bottom:3px}
+.gname{font-size:21px;font-weight:900;color:var(--txt)}
+.gsub{font-size:12px;color:var(--sub);margin-bottom:12px}
+.avbtn{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,var(--p),var(--pl));display:flex;align-items:center;justify-content:center;color:#fff;cursor:pointer;border:none;overflow:hidden;box-shadow:var(--shsm)}
+.avbtn img{width:100%;height:100%;object-fit:contain;padding:4px}
+.srch{display:flex;align-items:center;gap:9px;background:var(--sur2);border-radius:14px;padding:11px 15px;border:1.5px solid var(--bdr)}
+.srch:focus-within{border-color:var(--p)}
+.srch input{border:none;background:none;flex:1;font-family:'Nunito',sans-serif;font-size:14px;color:var(--txt);outline:none}
+.srch input::placeholder{color:var(--sub)}
 
-/* ===== DATE STRIP ===== */
-.dstrip{display:flex;gap:7px;overflow-x:auto;padding:8px 20px 2px;scrollbar-width:none;flex-shrink:0}
+/* date strip */
+.dstrip{display:flex;gap:8px;overflow-x:auto;padding:10px 20px 4px;scrollbar-width:none;flex-shrink:0}
 .dstrip::-webkit-scrollbar{display:none}
-.dc{display:flex;flex-direction:column;align-items:center;gap:1px;min-width:46px;padding:8px 4px;border-radius:12px;background:var(--sur2);cursor:pointer;transition:all .2s;border:2px solid transparent}
-.dc.tod{background:var(--p);box-shadow:0 4px 12px rgba(79,70,229,.3)}
-.dc .dn{font-size:9px;font-weight:700;color:var(--sub)}
-.dc .dd{font-size:16px;font-weight:900;color:var(--txt)}
+.dc{display:flex;flex-direction:column;align-items:center;gap:2px;min-width:48px;padding:9px 5px;border-radius:14px;background:var(--sur2);cursor:pointer;transition:all .2s;border:1.5px solid transparent;flex-shrink:0}
+.dc.tod{background:var(--p);box-shadow:0 4px 14px rgba(79,70,229,.3)}
+.dc .dn{font-size:9px;font-weight:700;color:var(--sub);text-transform:uppercase}
+.dc .dd{font-size:17px;font-weight:900;color:var(--txt)}
 .dc.tod .dn,.dc.tod .dd{color:#fff}
 
-/* ===== STAT CARDS ===== */
-.sgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 20px;margin-bottom:12px}
-.sc{border-radius:14px;padding:14px;cursor:pointer;transition:transform .2s;position:relative;overflow:hidden}
-.sc:active{transform:scale(.97)}
-.sc::after{content:'';position:absolute;right:-16px;bottom:-16px;width:64px;height:64px;border-radius:50%;background:rgba(255,255,255,.15)}
-.sc-a{background:linear-gradient(135deg,#a5f3fc,#67e8f9)}
-.sc-b{background:linear-gradient(135deg,#c7d2fe,#a5b4fc)}
-.sc-c{background:linear-gradient(135deg,#fca5a5,#f87171)}
-.sc-d{background:linear-gradient(135deg,#6ee7b7,#34d399)}
-[data-theme=dark] .sc-a{background:linear-gradient(135deg,#164e63,#0e7490)}
-[data-theme=dark] .sc-b{background:linear-gradient(135deg,#1e1b4b,#312e81)}
-[data-theme=dark] .sc-c{background:linear-gradient(135deg,#450a0a,#7f1d1d)}
-[data-theme=dark] .sc-d{background:linear-gradient(135deg,#064e3b,#065f46)}
-.sc-ico{font-size:22px;margin-bottom:3px}
-.sc-lbl{font-size:10px;font-weight:700;color:rgba(0,0,0,.55)}
-.sc-num{font-size:22px;font-weight:900;color:rgba(0,0,0,.7)}
-[data-theme=dark] .sc-lbl{color:rgba(255,255,255,.6)}
-[data-theme=dark] .sc-num{color:rgba(255,255,255,.85)}
+/* stat cards */
+.sgrid{display:grid;grid-template-columns:1fr 1fr;gap:11px;padding:12px 20px 4px}
+.scard{border-radius:16px;padding:14px 14px 12px;position:relative;overflow:hidden;cursor:pointer;transition:transform .2s}
+.scard:active{transform:scale(.97)}
+.scard::after{content:'';position:absolute;right:-18px;bottom:-18px;width:70px;height:70px;border-radius:50%;background:rgba(255,255,255,.18)}
+.sc0{background:linear-gradient(135deg,#a5f3fc,#38bdf8)}
+.sc1{background:linear-gradient(135deg,#c7d2fe,#818cf8)}
+.sc2{background:linear-gradient(135deg,#fca5a5,#f87171)}
+.sc3{background:linear-gradient(135deg,#6ee7b7,#10b981)}
+[data-theme=dark] .sc0{background:linear-gradient(135deg,#0c4a6e,#0369a1)}
+[data-theme=dark] .sc1{background:linear-gradient(135deg,#1e1b4b,#3730a3)}
+[data-theme=dark] .sc2{background:linear-gradient(135deg,#450a0a,#7f1d1d)}
+[data-theme=dark] .sc3{background:linear-gradient(135deg,#052e16,#065f46)}
+.sico{font-size:22px;margin-bottom:5px}
+.slbl{font-size:10px;font-weight:700;color:rgba(0,0,0,.5);text-transform:uppercase;letter-spacing:.3px}
+.snum{font-size:26px;font-weight:900;color:rgba(0,0,0,.68)}
+[data-theme=dark] .slbl{color:rgba(255,255,255,.55)}
+[data-theme=dark] .snum{color:rgba(255,255,255,.85)}
 
-/* ===== PROGRESS RING ===== */
-.pring-card{margin:0 20px 12px;background:var(--sur);border-radius:14px;padding:12px;box-shadow:var(--shsm);border:1px solid var(--bdr);display:flex;align-items:center;gap:12px}
+/* progress ring */
+.prc{margin:10px 20px;background:var(--sur);border-radius:16px;padding:13px;box-shadow:var(--shsm);border:1px solid var(--bdr);display:flex;align-items:center;gap:14px}
 .rw{position:relative;width:56px;height:56px;flex-shrink:0}
 .rw svg{transform:rotate(-90deg)}
-.rw-pct{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:11px;font-weight:900;color:var(--p)}
-.pi-t{font-size:13px;font-weight:800;color:var(--txt)}
-.pi-s{font-size:11px;color:var(--sub);margin-top:2px}
+.rpct{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:11px;font-weight:900;color:var(--p)}
+.ptit{font-size:13px;font-weight:800;color:var(--txt)}
+.psub{font-size:11px;color:var(--sub);margin-top:3px}
 
-/* ===== SECTION ROW ===== */
-.sec-row{display:flex;justify-content:space-between;align-items:center;padding:0 20px;margin-bottom:8px}
-.sec-t{font-size:15px;font-weight:800;color:var(--txt)}
-.see-all{font-size:11px;color:var(--p);font-weight:700;cursor:pointer}
+/* section row */
+.secrow{display:flex;justify-content:space-between;align-items:center;padding:10px 20px 7px}
+.sectl{font-size:15px;font-weight:800;color:var(--txt)}
+.seebtn{font-size:11px;color:var(--p);font-weight:700;cursor:pointer;padding:4px 10px;border-radius:8px;background:var(--pdim)}
 
-/* ===== TASK ITEM ===== */
-.ti{background:var(--sur);border-radius:14px;padding:11px 46px 11px 13px;margin:0 20px 9px;border-left:4px solid var(--p);box-shadow:var(--shsm);cursor:pointer;transition:all .2s;position:relative;border:1px solid var(--bdr);border-left-width:4px}
-.ti:active{transform:translateX(3px)}
-.ti.done{opacity:.6}
-.ti.done .tname{text-decoration:line-through;color:var(--sub)}
-.ti.ph{border-left-color:var(--red)}
-.ti.pm{border-left-color:var(--orange)}
-.ti.pl2{border-left-color:var(--green)}
-.tname{font-size:14px;font-weight:700;color:var(--txt);margin-bottom:2px}
-.ttime{font-size:11px;color:var(--sub);margin-bottom:5px}
+/* task item */
+.ti{
+  background:var(--sur);border-radius:16px;
+  padding:12px 48px 12px 14px;
+  margin:0 20px 10px;
+  border:1.5px solid var(--bdr);
+  border-left:4px solid var(--p);
+  box-shadow:var(--shsm);
+  cursor:pointer;transition:all .2s;position:relative;
+}
+.ti:active{transform:translateX(4px);box-shadow:var(--sh)}
+.ti.done{opacity:.58}
+.ti.done .tnm{text-decoration:line-through;color:var(--sub)}
+.ti.ph{border-left-color:#ef4444}
+.ti.pm{border-left-color:#f59e0b}
+.ti.pl2{border-left-color:#10b981}
+.tnm{font-size:14px;font-weight:700;color:var(--txt);margin-bottom:3px;line-height:1.3}
+.ttm{font-size:11px;color:var(--sub);margin-bottom:6px}
 .ttags{display:flex;gap:5px;flex-wrap:wrap;align-items:center}
-.tag{font-size:9px;font-weight:700;padding:2px 8px;border-radius:20px;text-transform:capitalize}
-.tag.work{background:var(--bbg);color:var(--blue)}
-.tag.home{background:var(--gbg);color:var(--green)}
-.tag.personal{background:var(--pubg);color:var(--purple)}
-.tag.urgent{background:var(--rbg);color:var(--red)}
-.tag.fitness{background:var(--obg);color:var(--orange)}
-.tag.study{background:var(--pkbg);color:var(--pink)}
-.tag.high{background:var(--rbg);color:var(--red)}
-.tag.medium{background:var(--obg);color:var(--orange)}
-.tag.low{background:var(--gbg);color:var(--green)}
+.tag{font-size:9px;font-weight:700;padding:3px 8px;border-radius:20px;text-transform:capitalize;letter-spacing:.2px}
+.tag.work{background:var(--bbg);color:#2563eb}
+.tag.home{background:var(--gbg);color:#059669}
+.tag.personal{background:var(--pubg);color:#7c3aed}
+.tag.urgent{background:var(--rbg);color:#dc2626}
+.tag.fitness{background:var(--obg);color:#d97706}
+.tag.study{background:var(--pkbg);color:#db2777}
+.tag.high{background:var(--rbg);color:#dc2626}
+.tag.medium{background:var(--obg);color:#d97706}
+.tag.low{background:var(--gbg);color:#059669}
 .tag.rec{background:var(--pdim);color:var(--p);font-size:8px}
-.stbar{height:3px;background:var(--bdr);border-radius:2px;margin-top:5px;overflow:hidden}
-.stfill{height:100%;background:var(--p);border-radius:2px}
-.t-ck{position:absolute;right:10px;top:50%;transform:translateY(-50%);width:26px;height:26px;border-radius:50%;border:2px solid var(--bdr);background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:11px;transition:all .2s;color:transparent}
-.ti.done .t-ck{background:var(--green);border-color:var(--green);color:#fff}
+.stbar{height:4px;background:var(--bdr);border-radius:2px;margin-top:7px;overflow:hidden}
+.stfill{height:100%;background:var(--p);border-radius:2px;transition:width .4s}
+.tck{
+  position:absolute;right:12px;top:50%;transform:translateY(-50%);
+  width:28px;height:28px;border-radius:50%;
+  border:2px solid var(--bdr);background:none;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;
+  font-size:13px;color:transparent;transition:all .2s;
+}
+.ti.done .tck{background:var(--green);border-color:var(--green);color:#fff}
 
-/* ===== FAB ===== */
-.fab{position:fixed;bottom:76px;right:18px;width:52px;height:52px;border-radius:50%;background:var(--p);color:#fff;border:none;font-size:24px;cursor:pointer;box-shadow:0 6px 20px rgba(79,70,229,.4);display:flex;align-items:center;justify-content:center;transition:all .2s;z-index:100}
-.fab:active{transform:scale(.92) rotate(45deg)}
+/* FAB */
+.fab{
+  position:fixed;
+  right:20px;
+  bottom:calc(72px + var(--pb) + 14px);
+  width:54px;height:54px;border-radius:50%;
+  background:var(--p);color:#fff;border:none;font-size:26px;
+  cursor:pointer;box-shadow:0 6px 22px rgba(79,70,229,.45);
+  display:flex;align-items:center;justify-content:center;
+  transition:all .2s;z-index:90;
+}
+.fab:active{transform:scale(.9) rotate(45deg)}
 
-/* ===== CALENDAR ===== */
-#calScr{background:var(--sur)}
-.cal-hdr{padding:8px 20px 12px;background:var(--sur);flex-shrink:0}
-.cal-nav{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
-.cal-mn{font-size:18px;font-weight:900;color:var(--txt)}
-.cal-ar{width:34px;height:34px;border-radius:10px;background:var(--sur2);border:1px solid var(--bdr);cursor:pointer;font-size:16px;color:var(--txt);display:flex;align-items:center;justify-content:center}
-.cal-ar:active{background:var(--pdim);color:var(--p)}
-.cdnames{display:grid;grid-template-columns:repeat(7,1fr);text-align:center;margin-bottom:4px}
-.cdn{font-size:9px;font-weight:700;color:var(--sub);padding:2px 0}
-.cgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
-.cc{aspect-ratio:1;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--txt);cursor:pointer;position:relative;transition:all .2s}
+/* ══════════════════════════════
+   CALENDAR
+══════════════════════════════ */
+.calhdr{padding:6px 20px 14px;flex-shrink:0}
+.calnav{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
+.calmn{font-size:19px;font-weight:900;color:var(--txt)}
+.calar{width:36px;height:36px;border-radius:11px;background:var(--sur2);border:1.5px solid var(--bdr);cursor:pointer;font-size:18px;color:var(--txt);display:flex;align-items:center;justify-content:center;transition:all .2s}
+.calar:active{background:var(--pdim);color:var(--p)}
+.cdns{display:grid;grid-template-columns:repeat(7,1fr);text-align:center;margin-bottom:5px}
+.cdn{font-size:10px;font-weight:700;color:var(--sub);padding:3px 0}
+.cgrid{display:grid;grid-template-columns:repeat(7,1fr);gap:3px}
+.cc{aspect-ratio:1;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:var(--txt);cursor:pointer;position:relative;transition:all .15s}
 .cc:active:not(.emp){background:var(--pdim)}
 .cc.ctod{background:var(--p);color:#fff;box-shadow:0 3px 10px rgba(79,70,229,.3)}
-.cc.hast::after{content:'';position:absolute;bottom:2px;left:50%;transform:translateX(-50%);width:3px;height:3px;border-radius:50%;background:var(--orange)}
+.cc.hast::after{content:'';position:absolute;bottom:2px;left:50%;transform:translateX(-50%);width:4px;height:4px;border-radius:50%;background:var(--orange)}
 .cc.ctod.hast::after{background:#fff}
-.cc.csel:not(.ctod){background:var(--pdim);color:var(--p);border:2px solid var(--p)}
+.cc.csel:not(.ctod){background:var(--pdim);color:var(--p);border:1.5px solid var(--p)}
 
-/* ===== STATS ===== */
+/* ══════════════════════════════
+   STATS
+══════════════════════════════ */
 #statsScr{background:var(--sur2)}
-.sph{padding:8px 20px 12px;background:var(--sur);border-bottom:1px solid var(--bdr);flex-shrink:0}
-.sph-t{font-size:20px;font-weight:900;color:var(--txt)}
-.sph-s{font-size:11px;color:var(--sub);margin-top:2px}
-.wchart{background:var(--sur);border-radius:14px;padding:16px;margin:12px 20px 10px;box-shadow:var(--shsm);border:1px solid var(--bdr)}
-.wct{font-size:13px;font-weight:800;color:var(--txt);margin-bottom:12px}
-.bars{display:flex;align-items:flex-end;gap:6px;height:70px}
-.bcol{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px}
-.bfill{width:100%;border-radius:4px 4px 0 0;background:var(--pdim);min-height:3px}
+.stph{padding:6px 20px 14px;background:var(--sur);border-bottom:1px solid var(--bdr);flex-shrink:0}
+.stpt{font-size:21px;font-weight:900;color:var(--txt)}
+.stps{font-size:12px;color:var(--sub);margin-top:3px}
+.wchart{background:var(--sur);border-radius:16px;padding:16px;margin:12px 20px 10px;box-shadow:var(--shsm);border:1px solid var(--bdr)}
+.wct{font-size:13px;font-weight:800;color:var(--txt);margin-bottom:14px}
+.bars{display:flex;align-items:flex-end;gap:7px;height:72px}
+.bcol{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px}
+.bfill{width:100%;border-radius:5px 5px 0 0;background:var(--pdim);min-height:4px;transition:height .5s}
 .bfill.act{background:var(--p)}
 .bday{font-size:9px;color:var(--sub);font-weight:700}
 .bigs{padding:0 20px;display:flex;flex-direction:column;gap:9px}
-.bst{background:var(--sur);border-radius:14px;padding:14px;box-shadow:var(--shsm);border:1px solid var(--bdr)}
-.bs-l{font-size:11px;color:var(--sub);font-weight:600;margin-bottom:2px}
-.bs-v{font-size:26px;font-weight:900;color:var(--p)}
-.bs-bw{height:6px;background:var(--bdr);border-radius:3px;margin-top:8px;overflow:hidden}
-.bs-b{height:100%;border-radius:3px;background:var(--p)}
-.bs-b.g{background:var(--green)}.bs-b.r{background:var(--red)}.bs-b.o{background:var(--orange)}
-.mtbl{background:var(--sur);border-radius:14px;padding:16px;margin:10px 20px;box-shadow:var(--shsm);border:1px solid var(--bdr)}
-.mt-t{font-size:13px;font-weight:800;color:var(--txt);margin-bottom:10px}
-.mt-r{display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--bdr);font-size:12px}
-.mt-r:last-child{border-bottom:none}
-.mt-l{color:var(--sub);font-weight:600}.mt-v{font-weight:800;color:var(--txt)}
-.mt-v.g{color:var(--green)}.mt-v.r{color:var(--red)}.mt-v.o{color:var(--orange)}
-
-/* ===== ACHIEVEMENTS ===== */
-.achgrid{display:grid;grid-template-columns:1fr 1fr;gap:9px;padding:0 20px;margin-bottom:10px}
-.ach{background:var(--sur);border-radius:14px;padding:12px;text-align:center;box-shadow:var(--shsm);border:1px solid var(--bdr);transition:all .2s;position:relative}
+.bst{background:var(--sur);border-radius:16px;padding:14px 16px;box-shadow:var(--shsm);border:1px solid var(--bdr)}
+.bsl{font-size:11px;color:var(--sub);font-weight:600;margin-bottom:3px;text-transform:uppercase;letter-spacing:.3px}
+.bsv{font-size:28px;font-weight:900;color:var(--p)}
+.bsbw{height:6px;background:var(--bdr);border-radius:3px;margin-top:9px;overflow:hidden}
+.bsb{height:100%;border-radius:3px;background:var(--p);transition:width .5s}
+.bsb.g{background:var(--green)}.bsb.o{background:var(--orange)}
+.mtbl{background:var(--sur);border-radius:16px;padding:16px;margin:10px 20px;box-shadow:var(--shsm);border:1px solid var(--bdr)}
+.mtt{font-size:13px;font-weight:800;color:var(--txt);margin-bottom:11px}
+.mtr{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--bdr);font-size:13px}
+.mtr:last-child{border-bottom:none}
+.mtl{color:var(--sub);font-weight:600}.mtv{font-weight:800;color:var(--txt)}
+.mtv.g{color:var(--green)}.mtv.r{color:var(--red)}.mtv.o{color:var(--orange)}
+.achgrid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:0 20px;margin-bottom:12px}
+.ach{background:var(--sur);border-radius:16px;padding:13px;text-align:center;box-shadow:var(--shsm);border:1px solid var(--bdr);position:relative}
 .ach.unl{border-color:var(--p);background:var(--pdim)}
-.ach.unl::after{content:'✓';position:absolute;top:6px;right:8px;font-size:10px;color:var(--p);font-weight:800}
-.ach-ico{font-size:26px;margin-bottom:4px}
+.ach.unl::after{content:'✓';position:absolute;top:7px;right:10px;font-size:10px;color:var(--p);font-weight:900}
+.ach:not(.unl){filter:grayscale(.7);opacity:.5}
+.ach-i{font-size:28px;margin-bottom:5px}
 .ach-n{font-size:10px;font-weight:800;color:var(--txt)}
-.ach-d{font-size:9px;color:var(--sub);margin-top:1px}
-.ach:not(.unl){filter:grayscale(.65);opacity:.55}
+.ach-d{font-size:9px;color:var(--sub);margin-top:2px}
 
-/* ===== PROFILE ===== */
+/* ══════════════════════════════
+   PROFILE
+══════════════════════════════ */
 #profScr{background:var(--sur2)}
-.prof-hdr{background:linear-gradient(135deg,var(--p),var(--pl));padding:12px 20px 22px;text-align:center;flex-shrink:0}
-.dayzy-brand{display:flex;align-items:center;justify-content:center;gap:7px;margin-bottom:12px}
-.dayzy-brand img{width:26px;height:26px;object-fit:contain;border-radius:6px;background:rgba(255,255,255,.2);padding:2px}
-.dayzy-brand span{font-family:'Poppins',sans-serif;font-size:18px;font-weight:800;color:#fff}
-.prof-av{width:76px;height:76px;border-radius:50%;background:#fff;margin:0 auto 8px;display:flex;align-items:center;justify-content:center;overflow:hidden;cursor:pointer;border:3px solid rgba(255,255,255,.5);box-shadow:0 6px 20px rgba(0,0,0,.15);position:relative}
-.prof-av img{width:100%;height:100%;object-fit:contain;padding:6px}
-.prof-edit-ico{position:absolute;bottom:-2px;right:-2px;width:22px;height:22px;border-radius:50%;background:var(--p);border:2px solid #fff;display:flex;align-items:center;justify-content:center;font-size:10px;cursor:pointer}
-.prof-nm{font-size:19px;font-weight:900;color:#fff}
-.prof-em{font-size:12px;color:rgba(255,255,255,.75);margin-top:2px}
-.prof-stats{display:flex;margin-top:12px;background:rgba(255,255,255,.15);border-radius:12px;overflow:hidden}
-.psi{flex:1;text-align:center;padding:8px 4px;border-right:1px solid rgba(255,255,255,.2)}
+.profhdr{background:linear-gradient(140deg,var(--p) 0%,var(--pl) 100%);padding:16px 20px 22px;flex-shrink:0}
+.profbrand{display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:16px}
+.profbrand img{width:28px;height:28px;object-fit:contain;border-radius:8px;background:rgba(255,255,255,.2);padding:3px}
+.profbrand span{font-family:'Poppins',sans-serif;font-size:18px;font-weight:800;color:#fff;letter-spacing:-.3px}
+.profav-wrap{position:relative;display:inline-block;margin-bottom:9px}
+.profav{width:78px;height:78px;border-radius:50%;background:rgba(255,255,255,.18);display:flex;align-items:center;justify-content:center;overflow:hidden;cursor:pointer;border:3px solid rgba(255,255,255,.4);box-shadow:0 6px 20px rgba(0,0,0,.18)}
+.profav img{width:100%;height:100%;object-fit:contain;padding:7px}
+.editico{position:absolute;bottom:-2px;right:-2px;width:24px;height:24px;border-radius:50%;background:var(--p);border:2.5px solid #fff;display:flex;align-items:center;justify-content:center;font-size:11px;cursor:pointer}
+.profnm{font-size:19px;font-weight:900;color:#fff}
+.profem{font-size:12px;color:rgba(255,255,255,.72);margin-top:2px}
+.profst{display:flex;margin-top:14px;background:rgba(255,255,255,.14);border-radius:14px;overflow:hidden}
+.psi{flex:1;text-align:center;padding:9px 4px;border-right:1px solid rgba(255,255,255,.18)}
 .psi:last-child{border-right:none}
-.psi-n{font-size:16px;font-weight:900;color:#fff}
-.psi-l{font-size:9px;color:rgba(255,255,255,.7);font-weight:600}
-.prof-body{padding:14px 20px;overflow-y:auto;flex:1;-webkit-overflow-scrolling:touch}
-.scard{background:var(--sur);border-radius:14px;overflow:hidden;box-shadow:var(--shsm);border:1px solid var(--bdr);margin-bottom:10px}
-.srow{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;cursor:pointer;transition:background .2s;border-bottom:1px solid var(--bdr)}
-.srow:last-child{border-bottom:none}
-.srow:active{background:var(--pdim)}
-.sleft{display:flex;align-items:center;gap:10px}
-.sico{width:34px;height:34px;border-radius:9px;background:var(--pdim);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
-.stit{font-size:13px;font-weight:700;color:var(--txt)}
-.ssub{font-size:10px;color:var(--sub);margin-top:1px}
-.sright{color:var(--sub);font-size:16px;display:flex;align-items:center;gap:6px}
-.tog{width:42px;height:22px;background:var(--bdr);border-radius:11px;position:relative;cursor:pointer;transition:background .3s;flex-shrink:0}
+.psin{font-size:17px;font-weight:900;color:#fff}
+.psil{font-size:9px;color:rgba(255,255,255,.65);font-weight:700;text-transform:uppercase;letter-spacing:.3px}
+.profbody{padding:14px 20px;overflow-y:auto;flex:1;-webkit-overflow-scrolling:touch}
+.profbody::-webkit-scrollbar{display:none}
+.pcard{background:var(--sur);border-radius:16px;overflow:hidden;box-shadow:var(--shsm);border:1px solid var(--bdr);margin-bottom:11px}
+.prow{display:flex;align-items:center;justify-content:space-between;padding:13px 15px;cursor:pointer;transition:background .15s;border-bottom:1px solid var(--bdr)}
+.prow:last-child{border-bottom:none}
+.prow:active{background:var(--sur2)}
+.pleft{display:flex;align-items:center;gap:11px}
+.pico{width:36px;height:36px;border-radius:10px;background:var(--pdim);display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0}
+.ptit{font-size:13px;font-weight:700;color:var(--txt)}
+.psub2{font-size:10px;color:var(--sub);margin-top:1px}
+.pright{color:var(--sub);font-size:15px;display:flex;align-items:center;gap:7px}
+.tog{width:44px;height:24px;background:var(--bdr);border-radius:12px;position:relative;cursor:pointer;transition:background .28s;flex-shrink:0}
 .tog.on{background:var(--p)}
-.tog::after{content:'';position:absolute;width:16px;height:16px;border-radius:50%;background:#fff;top:3px;left:3px;transition:left .3s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.tog::after{content:'';position:absolute;width:18px;height:18px;border-radius:50%;background:#fff;top:3px;left:3px;transition:left .28s;box-shadow:0 1px 4px rgba(0,0,0,.2)}
 .tog.on::after{left:23px}
-.lbadge{font-size:10px;font-weight:700;color:var(--p);background:var(--pdim);padding:2px 8px;border-radius:20px}
-.swatches{display:flex;gap:7px;flex-wrap:wrap;padding:8px 14px 12px;border-top:1px solid var(--bdr)}
-.sw{width:28px;height:28px;border-radius:50%;cursor:pointer;transition:all .2s;border:3px solid transparent;display:flex;align-items:center;justify-content:center;font-size:12px}
-.sw:active{transform:scale(1.15)}
-.sw.sel{border-color:var(--txt)}
+.lbadge{font-size:10px;font-weight:700;color:var(--p);background:var(--pdim);padding:3px 9px;border-radius:20px}
+.swatches{display:flex;gap:8px;flex-wrap:wrap;padding:10px 15px 14px;border-top:1px solid var(--bdr)}
+.sw{width:30px;height:30px;border-radius:50%;cursor:pointer;transition:all .18s;border:3px solid transparent;display:flex;align-items:center;justify-content:center;font-size:12px}
+.sw.on{border-color:var(--txt);transform:scale(1.15)}
 
-/* ===== ADD TASK ===== */
+/* ══════════════════════════════
+   ADD/EDIT TASK SCREEN
+══════════════════════════════ */
 #addScr{background:var(--sur)}
-.add-hdr{padding:10px 20px 12px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--bdr);flex-shrink:0;background:var(--sur)}
-.back-btn{width:38px;height:38px;border-radius:10px;background:var(--sur2);border:1px solid var(--bdr);cursor:pointer;font-size:16px;color:var(--txt);display:flex;align-items:center;justify-content:center}
-.add-title{font-size:17px;font-weight:900;color:var(--txt)}
-.fscroll{flex:1;overflow-y:auto;padding:14px 20px;-webkit-overflow-scrolling:touch}
+.addhdr{padding:10px 20px 12px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--bdr);flex-shrink:0}
+.backbtn{width:38px;height:38px;border-radius:11px;background:var(--sur2);border:1.5px solid var(--bdr);cursor:pointer;font-size:18px;color:var(--txt);display:flex;align-items:center;justify-content:center;transition:all .2s}
+.backbtn:active{background:var(--pdim);color:var(--p)}
+.addtit{font-size:17px;font-weight:900;color:var(--txt)}
+.fscroll{flex:1;overflow-y:auto;padding:16px 20px 4px;-webkit-overflow-scrolling:touch}
 .fscroll::-webkit-scrollbar{display:none}
-.fg{margin-bottom:14px}
-.flbl{font-size:10px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.6px;margin-bottom:6px;display:block}
-.finp{width:100%;padding:11px 13px;border-radius:12px;border:2px solid var(--bdr);background:var(--sur2);font-family:'Nunito',sans-serif;font-size:13px;color:var(--txt);outline:none;transition:border .2s}
+.fg{margin-bottom:15px}
+.flbl{font-size:10px;font-weight:700;color:var(--sub);text-transform:uppercase;letter-spacing:.7px;margin-bottom:7px;display:block}
+.finp{width:100%;padding:12px 14px;border-radius:13px;border:1.5px solid var(--bdr);background:var(--sur2);font-family:'Nunito',sans-serif;font-size:14px;color:var(--txt);outline:none;transition:all .2s}
 .finp:focus{border-color:var(--p);background:var(--sur)}
 .finp::placeholder{color:var(--sub)}
-.trow{display:grid;grid-template-columns:1fr 1fr;gap:9px}
-.chips{display:flex;gap:6px;flex-wrap:wrap}
-.chip{padding:6px 12px;border-radius:20px;border:2px solid var(--bdr);background:var(--sur2);font-family:'Nunito',sans-serif;font-size:11px;font-weight:700;cursor:pointer;color:var(--sub);transition:all .2s}
+.trow{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.chips{display:flex;gap:7px;flex-wrap:wrap}
+.chip{padding:7px 13px;border-radius:20px;border:1.5px solid var(--bdr);background:var(--sur2);font-family:'Nunito',sans-serif;font-size:11px;font-weight:700;cursor:pointer;color:var(--sub);transition:all .18s}
 .chip.sel{border-color:var(--p);background:var(--pdim);color:var(--p)}
-.chip.sh{border-color:var(--red);background:var(--rbg);color:var(--red)}
-.chip.sm{border-color:var(--orange);background:var(--obg);color:var(--orange)}
-.chip.sl{border-color:var(--green);background:var(--gbg);color:var(--green)}
-.stlist{display:flex;flex-direction:column;gap:5px;margin-bottom:7px}
-.sti{display:flex;align-items:center;gap:7px;background:var(--sur2);border-radius:9px;padding:7px 10px;border:1px solid var(--bdr)}
-.stck{width:18px;height:18px;border-radius:50%;border:2px solid var(--bdr);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:9px;transition:all .2s;flex-shrink:0;background:none;color:transparent}
-.stck.done{background:var(--green);border-color:var(--green);color:#fff}
-.sttxt{flex:1;font-size:12px;color:var(--txt);font-weight:600}
-.stdel{background:none;border:none;cursor:pointer;color:var(--sub);font-size:14px}
-.stadd{display:flex;gap:7px}
-.stinp{flex:1;padding:9px 12px;border-radius:10px;border:2px dashed var(--bdr);background:var(--sur2);font-family:'Nunito',sans-serif;font-size:12px;color:var(--txt);outline:none}
+.chip.sh{border-color:#ef4444;background:#fee2e2;color:#dc2626}
+.chip.sm{border-color:#f59e0b;background:#fef3c7;color:#d97706}
+.chip.sl{border-color:#10b981;background:#d1fae5;color:#059669}
+.stlist{display:flex;flex-direction:column;gap:6px;margin-bottom:8px}
+.sti{display:flex;align-items:center;gap:8px;background:var(--sur2);border-radius:11px;padding:8px 11px;border:1px solid var(--bdr)}
+.stck{width:20px;height:20px;border-radius:50%;border:2px solid var(--bdr);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:10px;flex-shrink:0;background:none;color:transparent;transition:all .2s}
+.stck.on{background:var(--green);border-color:var(--green);color:#fff}
+.sttx{flex:1;font-size:13px;color:var(--txt);font-weight:600}
+.stdel{background:none;border:none;cursor:pointer;color:var(--sub);font-size:16px;padding:2px}
+.starow{display:flex;gap:8px}
+.stinp{flex:1;padding:10px 13px;border-radius:11px;border:1.5px dashed var(--bdr);background:var(--sur2);font-family:'Nunito',sans-serif;font-size:13px;color:var(--txt);outline:none}
 .stinp:focus{border-color:var(--p);border-style:solid}
-.staddb{width:36px;height:36px;border-radius:10px;background:var(--p);color:#fff;border:none;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
-.ffooter{padding:12px 20px 24px;flex-shrink:0;background:var(--sur)}
-.btn-full{width:100%;padding:14px;border-radius:14px;background:var(--p);color:#fff;font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;border:none;cursor:pointer;box-shadow:0 6px 18px rgba(79,70,229,.3)}
-.btn-full:active{filter:brightness(.9)}
+.staddb{width:38px;height:38px;border-radius:11px;background:var(--p);color:#fff;border:none;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ffooter{padding:12px 20px calc(16px + var(--pb));flex-shrink:0;background:var(--sur);border-top:1px solid var(--bdr)}
+.btnfull{width:100%;padding:15px;border-radius:15px;background:var(--p);color:#fff;font-family:'Nunito',sans-serif;font-size:15px;font-weight:800;border:none;cursor:pointer;box-shadow:0 6px 20px rgba(79,70,229,.32);transition:all .2s}
+.btnfull:active{filter:brightness(.92);transform:scale(.98)}
 
-/* ===== POMODORO ===== */
+/* ══════════════════════════════
+   POMODORO
+══════════════════════════════ */
 #pomScr{background:var(--sur)}
-.pom-hdr{padding:10px 20px 14px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--bdr);flex-shrink:0}
-.pom-body{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px 20px;gap:16px;overflow-y:auto}
-.pom-tn{font-size:13px;font-weight:700;color:var(--sub);text-align:center}
-.pom-sel{width:100%;padding:10px 13px;border-radius:12px;border:2px solid var(--bdr);background:var(--sur2);font-family:'Nunito',sans-serif;font-size:12px;color:var(--txt);outline:none}
-.pom-sel:focus{border-color:var(--p)}
-.pom-modes{display:flex;gap:7px;flex-wrap:wrap;justify-content:center}
-.pmb{padding:7px 14px;border-radius:20px;border:2px solid var(--bdr);background:var(--sur2);font-family:'Nunito',sans-serif;font-size:11px;font-weight:700;cursor:pointer;color:var(--sub)}
+.pomhdr{padding:8px 20px 14px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--bdr);flex-shrink:0}
+.pomtit{font-size:17px;font-weight:900;color:var(--txt)}
+.pombody{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px;gap:18px;overflow-y:auto}
+.pomtn{font-size:13px;font-weight:700;color:var(--sub);text-align:center;min-height:20px}
+.pomsel{width:100%;padding:11px 14px;border-radius:13px;border:1.5px solid var(--bdr);background:var(--sur2);font-family:'Nunito',sans-serif;font-size:13px;color:var(--txt);outline:none}
+.pomsel:focus{border-color:var(--p)}
+.pommodes{display:flex;gap:8px}
+.pmb{padding:8px 16px;border-radius:20px;border:1.5px solid var(--bdr);background:var(--sur2);font-family:'Nunito',sans-serif;font-size:11px;font-weight:700;cursor:pointer;color:var(--sub);transition:all .18s}
 .pmb.on{background:var(--pdim);border-color:var(--p);color:var(--p)}
-.pring{position:relative;width:200px;height:200px}
-.pring svg{transform:rotate(-90deg)}
-.ptime{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center}
-.pdisp{font-size:42px;font-weight:900;color:var(--txt);font-family:'Poppins',sans-serif;line-height:1}
-.plbl{font-size:12px;color:var(--sub);font-weight:700;margin-top:3px}
-.pdots{display:flex;gap:5px}
-.pdot{width:9px;height:9px;border-radius:50%;background:var(--bdr)}
-.pdot.done{background:var(--p)}
-.pctrl{display:flex;gap:14px;align-items:center}
-.pcb{width:52px;height:52px;border-radius:50%;border:none;cursor:pointer;font-size:20px;display:flex;align-items:center;justify-content:center;transition:all .2s}
-.pcb:active{transform:scale(.9)}
-.pc-play{background:var(--p);color:#fff;box-shadow:0 6px 20px rgba(79,70,229,.4)}
-.pc-rst{background:var(--sur2);color:var(--sub);border:2px solid var(--bdr)}
+.pomring{position:relative;width:210px;height:210px}
+.pomring svg{transform:rotate(-90deg)}
+.pomtime{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center}
+.pomd{font-size:44px;font-weight:900;color:var(--txt);font-family:'Poppins',sans-serif;line-height:1}
+.poml{font-size:12px;color:var(--sub);font-weight:700;margin-top:4px;letter-spacing:.5px}
+.pomdots{display:flex;gap:6px}
+.pdot{width:10px;height:10px;border-radius:50%;background:var(--bdr);transition:all .3s}
+.pdot.on{background:var(--p)}
+.pomctrl{display:flex;gap:16px;align-items:center}
+.pcb{width:54px;height:54px;border-radius:50%;border:none;cursor:pointer;font-size:22px;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.pcb:active{transform:scale(.88)}
+.pcplay{background:var(--p);color:#fff;box-shadow:0 6px 22px rgba(79,70,229,.42)}
+.pcrst{background:var(--sur2);color:var(--sub);border:1.5px solid var(--bdr)}
 
-/* ===== OVERLAYS ===== */
-.ov{display:none;position:fixed;inset:0;background:rgba(15,14,26,.55);z-index:300;align-items:flex-end;backdrop-filter:blur(3px)}
-.ov.on{display:flex}
-.mbox{background:var(--sur);border-radius:24px 24px 0 0;padding:20px 20px 40px;width:100%;animation:slideUp .28s ease;max-height:80vh;overflow-y:auto}
+/* ══════════════════════════════
+   OVERLAYS / MODALS
+══════════════════════════════ */
+.ov{display:none;position:fixed;inset:0;background:rgba(10,9,26,.58);z-index:400;align-items:flex-end;backdrop-filter:blur(4px)}
+.ov.on{display:flex;animation:fadeIn .18s ease}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.mbox{
+  background:var(--sur);border-radius:26px 26px 0 0;
+  padding:20px 20px calc(32px + var(--pb));
+  width:100%;animation:slideUp .26s cubic-bezier(.22,.9,.36,1);
+  max-height:82vh;overflow-y:auto;
+}
 .mbox::-webkit-scrollbar{display:none}
 @keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
-.mhdl{width:36px;height:4px;background:var(--bdr);border-radius:4px;margin:0 auto 16px}
-.mtit{font-size:17px;font-weight:900;color:var(--txt);margin-bottom:12px}
-.macts{display:flex;gap:7px;margin-top:16px}
-.mbtn{flex:1;padding:12px;border-radius:12px;border:none;font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;cursor:pointer}
+.mhdl{width:38px;height:4px;background:var(--bdr);border-radius:4px;margin:0 auto 18px}
+.mtit{font-size:18px;font-weight:900;color:var(--txt);margin-bottom:13px}
+.macts{display:flex;gap:8px;margin-top:18px}
+.mbtn{flex:1;padding:13px;border-radius:13px;border:none;font-family:'Nunito',sans-serif;font-size:12px;font-weight:700;cursor:pointer;transition:all .18s}
 .mbtn:active{filter:brightness(.9)}
-.mb-ok{background:var(--green);color:#fff}
-.mb-ed{background:var(--pdim);color:var(--p)}
-.mb-dl{background:var(--rbg);color:var(--red)}
-.mst-list{display:flex;flex-direction:column;gap:5px;margin-top:8px}
-.mst-i{display:flex;align-items:center;gap:7px;padding:7px 10px;background:var(--sur2);border-radius:9px}
-.mst-ck{width:18px;height:18px;border-radius:50%;border:2px solid var(--bdr);background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:9px;color:transparent;flex-shrink:0;transition:all .2s}
-.mst-ck.done{background:var(--green);border-color:var(--green);color:#fff}
-.mst-tx{font-size:12px;color:var(--txt);font-weight:600}
-.mst-tx.done{text-decoration:line-through;color:var(--sub)}
-.ll{display:flex;flex-direction:column;gap:6px}
-.li{display:flex;align-items:center;justify-content:space-between;padding:11px 13px;border-radius:12px;background:var(--sur2);border:2px solid var(--bdr);cursor:pointer}
-.li:active,.li.al{border-color:var(--p);background:var(--pdim)}
-.li-l{display:flex;align-items:center;gap:9px}
-.li-f{font-size:18px}
-.li-n{font-size:13px;font-weight:700;color:var(--txt)}
-.pcbody{display:flex;flex-direction:column;align-items:center;gap:12px}
-.pcdots{display:flex;gap:10px;margin:4px 0}
-.pcd{width:14px;height:14px;border-radius:50%;border:2px solid var(--p);background:transparent;transition:all .2s}
-.pcd.fill{background:var(--p)}
-.pcpad{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;width:200px}
-.pck{height:50px;border-radius:11px;background:var(--sur2);border:2px solid var(--bdr);font-size:17px;font-weight:800;color:var(--txt);cursor:pointer;font-family:'Nunito',sans-serif}
+.mbok{background:var(--green);color:#fff}
+.mbed{background:var(--pdim);color:var(--p)}
+.mbdl{background:var(--rbg);color:var(--red)}
+.mslist{display:flex;flex-direction:column;gap:6px;margin-top:9px}
+.msi{display:flex;align-items:center;gap:8px;padding:8px 11px;background:var(--sur2);border-radius:11px}
+.msck{width:20px;height:20px;border-radius:50%;border:2px solid var(--bdr);background:none;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:10px;color:transparent;flex-shrink:0;transition:all .2s}
+.msck.on{background:var(--green);border-color:var(--green);color:#fff}
+.mstx{font-size:13px;color:var(--txt);font-weight:600}
+.mstx.done{text-decoration:line-through;color:var(--sub)}
+.llist{display:flex;flex-direction:column;gap:7px}
+.li{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-radius:13px;background:var(--sur2);border:1.5px solid var(--bdr);cursor:pointer;transition:all .15s}
+.li:active,.li.on{border-color:var(--p);background:var(--pdim)}
+.liL{display:flex;align-items:center;gap:10px}
+.lif{font-size:20px}.lin{font-size:13px;font-weight:700;color:var(--txt)}
+.pcbody{display:flex;flex-direction:column;align-items:center;gap:13px}
+.pcdots{display:flex;gap:12px;margin:5px 0}
+.pcd{width:15px;height:15px;border-radius:50%;border:2.5px solid var(--p);background:transparent;transition:all .2s}
+.pcd.on{background:var(--p)}
+.pcpad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;width:214px}
+.pck{height:52px;border-radius:13px;background:var(--sur2);border:1.5px solid var(--bdr);font-size:18px;font-weight:800;color:var(--txt);cursor:pointer;font-family:'Nunito',sans-serif;display:flex;align-items:center;justify-content:center;transition:all .15s}
 .pck:active{background:var(--pdim);border-color:var(--p);color:var(--p)}
 .pck.del{background:var(--rbg);color:var(--red);border-color:var(--rbg)}
-.eav-prev{width:80px;height:80px;border-radius:50%;background:var(--pdim);margin:0 auto 10px;display:flex;align-items:center;justify-content:center;cursor:pointer;overflow:hidden;border:3px solid var(--p)}
-.eav-prev img{width:100%;height:100%;object-fit:contain;padding:7px}
-.av-row{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:10px}
-.av-opt{cursor:pointer;width:52px;height:52px;display:flex;align-items:center;justify-content:center;border-radius:12px;border:3px solid transparent;background:var(--sur2);padding:4px;overflow:hidden;transition:all .2s}
-.av-opt img{width:100%;height:100%;object-fit:contain;border-radius:7px}
-.av-opt:active{border-color:var(--pl)}
-.av-opt.sel{border-color:var(--p);background:var(--pdim)}
+.eavprev{width:84px;height:84px;border-radius:50%;background:var(--pdim);margin:0 auto 12px;display:flex;align-items:center;justify-content:center;overflow:hidden;border:3px solid var(--p);cursor:pointer}
+.eavprev img{width:100%;height:100%;object-fit:contain;padding:8px}
+.avrow{display:flex;gap:9px;flex-wrap:wrap;justify-content:center;margin-bottom:12px}
+.avopt{cursor:pointer;width:54px;height:54px;display:flex;align-items:center;justify-content:center;border-radius:13px;border:2.5px solid transparent;background:var(--sur2);padding:5px;overflow:hidden;transition:all .18s}
+.avopt img{width:100%;height:100%;object-fit:contain;border-radius:7px}
+.avopt.on{border-color:var(--p);background:var(--pdim)}
 
-/* ===== TOAST ===== */
-.toast{position:fixed;top:60px;left:50%;transform:translateX(-50%) translateY(-10px);background:#1a1340;color:#fff;padding:9px 16px;border-radius:10px;font-size:12px;font-weight:700;white-space:nowrap;z-index:500;opacity:0;transition:all .3s;pointer-events:none}
+/* TOAST */
+.toast{
+  position:fixed;top:calc(var(--pt) + 14px);left:50%;
+  transform:translateX(-50%) translateY(-12px);
+  background:#1a1340;color:#fff;padding:10px 18px;
+  border-radius:12px;font-size:13px;font-weight:700;
+  white-space:nowrap;z-index:600;opacity:0;
+  transition:all .28s;pointer-events:none;
+}
 [data-theme=dark] .toast{background:#e0e7ff;color:#1a1340}
 .toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
 
-/* ===== EMPTY ===== */
-.empty{text-align:center;padding:32px 16px}
-.empty .ei{font-size:48px;margin-bottom:10px}
-.empty p{color:var(--sub);font-size:13px;line-height:1.6}
+/* EMPTY STATE */
+.empty{text-align:center;padding:40px 16px}
+.empty-i{font-size:52px;margin-bottom:12px}
+.empty p{color:var(--sub);font-size:14px;line-height:1.7}
 </style>
 </head>
 <body>
 <div id="app">
 <div class="toast" id="toast"></div>
 
-<!-- ======== PIN ======== -->
-<div class="scr" id="pinScr">
-  <div style="margin-bottom:14px;text-align:center">
-    <div style="display:flex;align-items:center;justify-content:center;gap:9px;margin-bottom:8px">
-      <img src="https://i.ibb.co/xS57LdJY/Chat-GPT-Image-Mar-3-2026-03-02-55-PM-Photoroom.png" style="width:44px;height:44px;object-fit:contain;border-radius:12px;box-shadow:0 3px 14px rgba(79,70,229,.22)">
-      <div class="pin-logo">DayZy<span>.</span></div>
-    </div>
-    <div class="pin-sub" id="pinSub">Enter your PIN to continue</div>
+<!-- ═══════════ WELCOME SCREEN ═══════════ -->
+<div class="scr" id="welcomeScr">
+  <div class="wlc-logo">
+    <img src="https://i.ibb.co/xS57LdJY/Chat-GPT-Image-Mar-3-2026-03-02-55-PM-Photoroom.png" alt="DayZy">
+    <span>DayZy.</span>
   </div>
-  <div class="pin-dots"><div class="pd" id="pd0"></div><div class="pd" id="pd1"></div><div class="pd" id="pd2"></div><div class="pd" id="pd3"></div></div>
+  <div class="wlc-tag">Your smart daily task manager<br>Stay organized, stay productive 🚀</div>
+  <button class="wlc-btn" onclick="go('setPinScr')">🔐 Set Up My PIN</button>
+  <div class="wlc-skip" onclick="skipSetup()">Skip, use without PIN</div>
+</div>
+
+<!-- ═══════════ SET PIN SCREEN ═══════════ -->
+<div class="scr" id="setPinScr">
+  <div class="sp-badge" id="spBadge">STEP 1 OF 2</div>
+  <div class="sp-title" id="spTitle">Create your PIN</div>
+  <div class="sp-sub" id="spSub">Choose a 4-digit PIN to lock your app</div>
+  <div class="sp-dots">
+    <div class="spd" id="spd0"></div><div class="spd" id="spd1"></div>
+    <div class="spd" id="spd2"></div><div class="spd" id="spd3"></div>
+  </div>
+  <div class="sp-err" id="spErr"></div>
+  <div class="sp-pad">
+    <button class="spk" onclick="spIn('1')">1</button><button class="spk" onclick="spIn('2')">2</button><button class="spk" onclick="spIn('3')">3</button>
+    <button class="spk" onclick="spIn('4')">4</button><button class="spk" onclick="spIn('5')">5</button><button class="spk" onclick="spIn('6')">6</button>
+    <button class="spk" onclick="spIn('7')">7</button><button class="spk" onclick="spIn('8')">8</button><button class="spk" onclick="spIn('9')">9</button>
+    <button class="spk" style="background:transparent;border:none"></button>
+    <button class="spk" onclick="spIn('0')">0</button>
+    <button class="spk del" onclick="spDel()">⌫</button>
+  </div>
+  <div class="sp-hint">You can change or disable PIN anytime<br>from Profile → Settings</div>
+</div>
+
+<!-- ═══════════ PIN ENTER SCREEN ═══════════ -->
+<div class="scr" id="pinScr">
+  <div class="pin-top">
+    <img src="https://i.ibb.co/xS57LdJY/Chat-GPT-Image-Mar-3-2026-03-02-55-PM-Photoroom.png" style="width:44px;height:44px;object-fit:contain;border-radius:12px;box-shadow:0 4px 14px rgba(79,70,229,.22)">
+    <div class="pin-logo">DayZy<span>.</span></div>
+  </div>
+  <div class="pin-sub" id="pinSub">Enter your PIN</div>
+  <div class="pin-dots">
+    <div class="pd" id="pd0"></div><div class="pd" id="pd1"></div>
+    <div class="pd" id="pd2"></div><div class="pd" id="pd3"></div>
+  </div>
   <div class="pin-err" id="pinErr"></div>
   <div class="pin-pad">
     <button class="pk" onclick="pIn('1')">1</button><button class="pk" onclick="pIn('2')">2</button><button class="pk" onclick="pIn('3')">3</button>
     <button class="pk" onclick="pIn('4')">4</button><button class="pk" onclick="pIn('5')">5</button><button class="pk" onclick="pIn('6')">6</button>
     <button class="pk" onclick="pIn('7')">7</button><button class="pk" onclick="pIn('8')">8</button><button class="pk" onclick="pIn('9')">9</button>
-    <button class="pk" style="background:transparent;border:none"></button><button class="pk" onclick="pIn('0')">0</button><button class="pk del" onclick="pDel()">⌫</button>
+    <button class="pk" style="background:transparent;border:none"></button>
+    <button class="pk" onclick="pIn('0')">0</button>
+    <button class="pk del" onclick="pDel()">⌫</button>
   </div>
-  <div class="pin-skip" onclick="go('homeScr')" id="pinSkip">Skip (demo)</div>
+  <div class="pin-skip" onclick="go('homeScr')" id="pinSkip">Forgot PIN? Reset App</div>
 </div>
 
-<!-- ======== HOME ======== -->
+<!-- ═══════════ HOME SCREEN ═══════════ -->
 <div class="scr" id="homeScr">
-  <div class="sbar"><span class="sbar-t" id="clk1">9:41</span><span class="sbar-i">●●● 📶 🔋</span></div>
-  <div class="page-hdr">
-    <div class="greet-row">
-      <div><div class="greeting" id="hGreet">Hi, User 👋</div><div class="sub-greet" id="hSub">Let's make today productive</div></div>
-      <button class="av-btn" id="homeAv" onclick="navGo('profScr',3)"></button>
+  <div class="sb"><span class="sb-t" id="clk1">9:41</span><span class="sb-i">●●● 📶 🔋</span></div>
+  <div class="phdr">
+    <div class="grow">
+      <div>
+        <div class="gname" id="hGreet">Hi, User 👋</div>
+        <div class="gsub" id="hSub">Let's make today count!</div>
+      </div>
+      <button class="avbtn" id="homeAv" onclick="navGo('profScr',4)"></button>
     </div>
-    <div class="search-bar"><span>🔍</span><input id="searchInp" placeholder="Search for task..." oninput="filterTasks()"></div>
+    <div class="srch"><span style="font-size:16px">🔍</span><input id="srchInp" placeholder="Search tasks..." oninput="filterTasks()"></div>
   </div>
-  <div class="sarea">
+  <div class="sa">
     <div class="dstrip" id="dstrip"></div>
-    <div style="padding:10px 20px 7px"><div class="sec-t" id="myTaskL">My Task</div></div>
+    <div style="padding:8px 20px 2px"><span class="sectl" id="myTL">My Task</span></div>
     <div class="sgrid">
-      <div class="sc sc-a"><div class="sc-ico">✅</div><div class="sc-lbl" id="sl0">Completed</div><div class="sc-num" id="cn0">0</div></div>
-      <div class="sc sc-b"><div class="sc-ico">🕐</div><div class="sc-lbl" id="sl1">Pending</div><div class="sc-num" id="cn1">0</div></div>
-      <div class="sc sc-c"><div class="sc-ico">❌</div><div class="sc-lbl" id="sl2">Canceled</div><div class="sc-num" id="cn2">0</div></div>
-      <div class="sc sc-d"><div class="sc-ico">🚀</div><div class="sc-lbl" id="sl3">On Going</div><div class="sc-num" id="cn3">0</div></div>
+      <div class="scard sc0"><div class="sico">✅</div><div class="slbl" id="sl0">Completed</div><div class="snum" id="cn0">0</div></div>
+      <div class="scard sc1"><div class="sico">🕐</div><div class="slbl" id="sl1">Pending</div><div class="snum" id="cn1">0</div></div>
+      <div class="scard sc2"><div class="sico">❌</div><div class="slbl" id="sl2">Canceled</div><div class="snum" id="cn2">0</div></div>
+      <div class="scard sc3"><div class="sico">🚀</div><div class="slbl" id="sl3">On Going</div><div class="snum" id="cn3">0</div></div>
     </div>
-    <div class="pring-card">
-      <div class="rw"><svg width="56" height="56" viewBox="0 0 56 56"><circle cx="28" cy="28" r="22" fill="none" stroke="var(--bdr)" stroke-width="5"/><circle cx="28" cy="28" r="22" fill="none" stroke="var(--p)" stroke-width="5" stroke-dasharray="138.2" id="progC" stroke-dashoffset="138.2" stroke-linecap="round" style="transition:stroke-dashoffset .6s ease"/></svg><div class="rw-pct" id="progPct">0%</div></div>
-      <div><div class="pi-t" id="todProgL">Today's Progress</div><div class="pi-s" id="progSub">0 of 0 tasks done</div></div>
+    <div class="prc">
+      <div class="rw">
+        <svg width="56" height="56" viewBox="0 0 56 56">
+          <circle cx="28" cy="28" r="22" fill="none" stroke="var(--bdr)" stroke-width="5"/>
+          <circle cx="28" cy="28" r="22" fill="none" stroke="var(--p)" stroke-width="5"
+            stroke-dasharray="138.2" id="progC" stroke-dashoffset="138.2"
+            stroke-linecap="round" style="transition:stroke-dashoffset .6s"/>
+        </svg>
+        <div class="rpct" id="progPct">0%</div>
+      </div>
+      <div>
+        <div class="ptit" id="todPL">Today's Progress</div>
+        <div class="psub" id="progSub">0 of 0 tasks done</div>
+      </div>
     </div>
-    <div class="sec-row"><div class="sec-t" id="todTaskL">Today Task</div><div class="see-all" id="viewAllL" onclick="showAll()">View All</div></div>
-    <div id="taskList" style="padding-bottom:90px"></div>
+    <div class="secrow">
+      <span class="sectl" id="todTL">Today's Tasks</span>
+      <span class="seebtn" onclick="showAll()">View All</span>
+    </div>
+    <div id="taskList" style="padding-bottom:100px"></div>
   </div>
   <button class="fab" onclick="openAdd()">+</button>
   <div class="bnav">
-    <button class="nb on" onclick="navGo('homeScr',0)"><svg viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg><span id="nbl0">Home</span></button>
-    <button class="nb" onclick="navGo('calScr',1)"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg><span id="nbl1">Calendar</span></button>
-    <button class="nb" onclick="navGo('pomScr',2)"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg><span id="nbl2">Timer</span></button>
-    <button class="nb" onclick="navGo('statsScr',3)"><svg viewBox="0 0 24 24"><path d="M3 20h18M8 20V8m4 12V4m4 16v-8"/></svg><span id="nbl3">Stats</span></button>
-    <button class="nb" onclick="navGo('profScr',4)"><svg viewBox="0 0 24 24"><circle cx="12" cy="7" r="4"/><path d="M20 21a8 8 0 10-16 0"/></svg><span id="nbl4">Profile</span></button>
+    <button class="nb on" onclick="navGo('homeScr',0)"><svg viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1z"/><path d="M9 21V12h6v9"/></svg><span id="nl0">Home</span></button>
+    <button class="nb" onclick="navGo('calScr',1)"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg><span id="nl1">Calendar</span></button>
+    <button class="nb" onclick="navGo('pomScr',2)"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg><span id="nl2">Timer</span></button>
+    <button class="nb" onclick="navGo('statsScr',3)"><svg viewBox="0 0 24 24"><path d="M3 20h18M8 20V8m4 12V4m4 16v-8"/></svg><span id="nl3">Stats</span></button>
+    <button class="nb" onclick="navGo('profScr',4)"><svg viewBox="0 0 24 24"><circle cx="12" cy="7" r="4"/><path d="M20 21a8 8 0 10-16 0"/></svg><span id="nl4">Profile</span></button>
   </div>
 </div>
 
-<!-- ======== CALENDAR ======== -->
+<!-- ═══════════ CALENDAR SCREEN ═══════════ -->
 <div class="scr" id="calScr">
-  <div class="sbar"><span class="sbar-t" id="clk2">9:41</span><span class="sbar-i">●●● 📶 🔋</span></div>
-  <div class="cal-hdr">
-    <div class="cal-nav"><button class="cal-ar" onclick="calPrev()">‹</button><div class="cal-mn" id="calMn"></div><button class="cal-ar" onclick="calNext()">›</button></div>
-    <div class="cdnames" id="cdnames"></div>
+  <div class="sb"><span class="sb-t" id="clk2">9:41</span><span class="sb-i">●●● 📶 🔋</span></div>
+  <div class="calhdr">
+    <div class="calnav">
+      <button class="calar" onclick="calPrev()">‹</button>
+      <div class="calmn" id="calMn"></div>
+      <button class="calar" onclick="calNext()">›</button>
+    </div>
+    <div class="cdns" id="cdns"></div>
     <div class="cgrid" id="cgrid"></div>
   </div>
-  <div class="sarea">
-    <div style="padding:10px 20px 7px"><div class="sec-t" id="calDTitle">Today's Tasks</div></div>
-    <div id="calTList" style="padding-bottom:80px"></div>
+  <div class="sa">
+    <div class="secrow"><span class="sectl" id="calDT">Tasks</span></div>
+    <div id="calTL" style="padding-bottom:90px"></div>
   </div>
   <div class="bnav">
-    <button class="nb" onclick="navGo('homeScr',0)"><svg viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg><span>Home</span></button>
+    <button class="nb" onclick="navGo('homeScr',0)"><svg viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1z"/><path d="M9 21V12h6v9"/></svg><span>Home</span></button>
     <button class="nb on" onclick="navGo('calScr',1)"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg><span>Calendar</span></button>
     <button class="nb" onclick="navGo('pomScr',2)"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg><span>Timer</span></button>
     <button class="nb" onclick="navGo('statsScr',3)"><svg viewBox="0 0 24 24"><path d="M3 20h18M8 20V8m4 12V4m4 16v-8"/></svg><span>Stats</span></button>
@@ -444,34 +641,39 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Nunito',sans-serif
   </div>
 </div>
 
-<!-- ======== POMODORO ======== -->
+<!-- ═══════════ POMODORO SCREEN ═══════════ -->
 <div class="scr" id="pomScr">
-  <div class="sbar"><span class="sbar-t">9:41</span><span class="sbar-i">●●● 📶 🔋</span></div>
-  <div class="pom-hdr"><div class="add-title">⏱️ Focus Timer</div></div>
-  <div class="pom-body">
-    <div class="pom-tn" id="pomTN">Select a task to focus on</div>
-    <select class="pom-sel" id="pomSel" onchange="pomPickTask()"><option value="">-- Select Task --</option></select>
-    <div class="pom-modes">
+  <div class="sb"><span class="sb-t">9:41</span><span class="sb-i">●●● 📶 🔋</span></div>
+  <div class="pomhdr"><div class="pomtit">⏱️ Focus Timer</div></div>
+  <div class="pombody">
+    <div class="pomtn" id="pomTN">Select a task to focus on</div>
+    <select class="pomsel" id="pomSel" onchange="pomPick()"><option value="">— Select Task —</option></select>
+    <div class="pommodes">
       <button class="pmb on" onclick="setPomMode('focus',this)">🎯 Focus</button>
       <button class="pmb" onclick="setPomMode('short',this)">☕ Short</button>
       <button class="pmb" onclick="setPomMode('long',this)">🛌 Long</button>
     </div>
-    <div class="pring">
-      <svg width="200" height="200" viewBox="0 0 200 200">
-        <circle cx="100" cy="100" r="88" fill="none" stroke="var(--bdr)" stroke-width="9"/>
-        <circle cx="100" cy="100" r="88" fill="none" stroke="var(--p)" stroke-width="9" stroke-dasharray="552.9" id="pomC" stroke-dashoffset="0" stroke-linecap="round" style="transition:stroke-dashoffset 1s linear"/>
+    <div class="pomring">
+      <svg width="210" height="210" viewBox="0 0 210 210">
+        <circle cx="105" cy="105" r="92" fill="none" stroke="var(--bdr)" stroke-width="10"/>
+        <circle cx="105" cy="105" r="92" fill="none" stroke="var(--p)" stroke-width="10"
+          stroke-dasharray="578.1" id="pomC" stroke-dashoffset="0"
+          stroke-linecap="round" style="transition:stroke-dashoffset 1s linear"/>
       </svg>
-      <div class="ptime"><div class="pdisp" id="pomDisp">25:00</div><div class="plbl" id="pomLbl">FOCUS</div></div>
+      <div class="pomtime">
+        <div class="pomd" id="pomDisp">25:00</div>
+        <div class="poml" id="pomLbl">FOCUS</div>
+      </div>
     </div>
-    <div class="pdots" id="pdots"></div>
-    <div class="pctrl">
-      <button class="pcb pc-rst" onclick="pomReset()">↺</button>
-      <button class="pcb pc-play" onclick="pomToggle()" id="pomPlayBtn">▶</button>
-      <button class="pcb pc-rst" onclick="pomSkip()">⏭</button>
+    <div class="pomdots" id="pomdots"></div>
+    <div class="pomctrl">
+      <button class="pcb pcrst" onclick="pomReset()">↺</button>
+      <button class="pcb pcplay" onclick="pomToggle()" id="pomPlayBtn">▶</button>
+      <button class="pcb pcrst" onclick="pomSkip()">⏭</button>
     </div>
   </div>
   <div class="bnav">
-    <button class="nb" onclick="navGo('homeScr',0)"><svg viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg><span>Home</span></button>
+    <button class="nb" onclick="navGo('homeScr',0)"><svg viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1z"/><path d="M9 21V12h6v9"/></svg><span>Home</span></button>
     <button class="nb" onclick="navGo('calScr',1)"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg><span>Calendar</span></button>
     <button class="nb on" onclick="navGo('pomScr',2)"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg><span>Timer</span></button>
     <button class="nb" onclick="navGo('statsScr',3)"><svg viewBox="0 0 24 24"><path d="M3 20h18M8 20V8m4 12V4m4 16v-8"/></svg><span>Stats</span></button>
@@ -479,20 +681,20 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Nunito',sans-serif
   </div>
 </div>
 
-<!-- ======== STATS ======== -->
+<!-- ═══════════ STATS SCREEN ═══════════ -->
 <div class="scr" id="statsScr">
-  <div class="sbar"><span class="sbar-t">9:41</span><span class="sbar-i">●●● 📶 🔋</span></div>
-  <div class="sph"><div class="sph-t" id="statsT">📊 Statistics</div><div class="sph-s" id="statsS">Your task overview</div></div>
-  <div class="sarea">
-    <div class="wchart"><div class="wct" id="weeklyL">Weekly Activity</div><div class="bars" id="wbars"></div></div>
+  <div class="sb"><span class="sb-t">9:41</span><span class="sb-i">●●● 📶 🔋</span></div>
+  <div class="stph"><div class="stpt" id="stT">📊 Statistics</div><div class="stps" id="stS">Your task overview</div></div>
+  <div class="sa">
+    <div class="wchart"><div class="wct">Weekly Activity</div><div class="bars" id="wbars"></div></div>
     <div class="bigs" id="bigStats"></div>
-    <div class="mtbl" id="mtbl"></div>
-    <div style="padding:0 20px 7px;margin-top:10px"><div class="sec-t">🏆 Achievements</div></div>
+    <div class="mtbl" id="mtbl" style="margin-top:0"></div>
+    <div style="padding:10px 20px 7px;margin-top:4px"><span class="sectl">🏆 Achievements</span></div>
     <div class="achgrid" id="achGrid"></div>
-    <div style="padding-bottom:80px"></div>
+    <div style="padding-bottom:90px"></div>
   </div>
   <div class="bnav">
-    <button class="nb" onclick="navGo('homeScr',0)"><svg viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg><span>Home</span></button>
+    <button class="nb" onclick="navGo('homeScr',0)"><svg viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1z"/><path d="M9 21V12h6v9"/></svg><span>Home</span></button>
     <button class="nb" onclick="navGo('calScr',1)"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg><span>Calendar</span></button>
     <button class="nb" onclick="navGo('pomScr',2)"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg><span>Timer</span></button>
     <button class="nb on" onclick="navGo('statsScr',3)"><svg viewBox="0 0 24 24"><path d="M3 20h18M8 20V8m4 12V4m4 16v-8"/></svg><span>Stats</span></button>
@@ -500,65 +702,66 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Nunito',sans-serif
   </div>
 </div>
 
-<!-- ======== PROFILE ======== -->
+<!-- ═══════════ PROFILE SCREEN ═══════════ -->
 <div class="scr" id="profScr">
-  <div class="prof-hdr">
-    <div class="sbar" style="padding:0 0 8px;background:transparent"><span class="sbar-t" style="color:rgba(255,255,255,.8)">9:41</span><span class="sbar-i" style="color:rgba(255,255,255,.6)">●●● 📶 🔋</span></div>
-    <div class="dayzy-brand">
+  <div class="profhdr">
+    <div class="sb" style="padding:0 0 10px;background:transparent">
+      <span class="sb-t" style="color:rgba(255,255,255,.8)">9:41</span>
+      <span class="sb-i" style="color:rgba(255,255,255,.5)">●●● 📶 🔋</span>
+    </div>
+    <div class="profbrand">
       <img src="https://i.ibb.co/xS57LdJY/Chat-GPT-Image-Mar-3-2026-03-02-55-PM-Photoroom.png">
-      <span>DayZy<span style="color:rgba(255,255,255,.5)">.</span></span>
+      <span>DayZy<span style="opacity:.55">.</span></span>
     </div>
-    <div style="position:relative;display:inline-block;margin-bottom:8px">
-      <div class="prof-av" id="profAv" onclick="openEditProf()"></div>
-      <div class="prof-edit-ico" onclick="openEditProf()">✏️</div>
+    <div style="text-align:center">
+      <div class="profav-wrap">
+        <div class="profav" id="profAv" onclick="openEditProf()"></div>
+        <div class="editico" onclick="openEditProf()">✏️</div>
+      </div>
+      <div class="profnm" id="profNm">User</div>
+      <div class="profem" id="profEm">user@dayzy.app</div>
     </div>
-    <div class="prof-nm" id="profNm">User</div>
-    <div class="prof-em" id="profEm">user@dayzy.app</div>
-    <div class="prof-stats" id="profStats"></div>
+    <div class="profst" id="profSt"></div>
   </div>
-  <div class="prof-body">
-    <div class="scard">
-      <div class="srow" onclick="toggleTheme()">
-        <div class="sleft"><div class="sico">🌙</div><div><div class="stit" id="darkML">Dark Mode</div><div class="ssub">Switch theme</div></div></div>
+  <div class="profbody">
+    <div class="pcard">
+      <div class="prow" onclick="toggleTheme()">
+        <div class="pleft"><div class="pico">🌙</div><div><div class="ptit">Dark Mode</div><div class="psub2">Switch appearance</div></div></div>
         <div class="tog" id="darkTog"></div>
       </div>
-      <div class="srow" onclick="openLangModal()">
-        <div class="sleft"><div class="sico">🌍</div><div><div class="stit" id="langL">Language</div><div class="ssub">Choose language</div></div></div>
-        <div class="sright"><span class="lbadge" id="langBadge">EN</span>›</div>
+      <div class="prow" onclick="openLang()">
+        <div class="pleft"><div class="pico">🌍</div><div><div class="ptit">Language</div><div class="psub2">App language</div></div></div>
+        <div class="pright"><span class="lbadge" id="langBadge">EN</span> ›</div>
       </div>
-      <div class="srow">
-        <div class="sleft"><div class="sico">🎨</div><div><div class="stit">Theme Color</div><div class="ssub">Accent color</div></div></div>
+      <div class="prow" style="cursor:default">
+        <div class="pleft"><div class="pico">🎨</div><div><div class="ptit">Theme Color</div><div class="psub2">Choose accent</div></div></div>
       </div>
       <div class="swatches" id="swatches"></div>
     </div>
-    <div class="scard">
-      <div class="srow" onclick="togglePinLock()">
-        <div class="sleft"><div class="sico">🔐</div><div><div class="stit" id="pinLockL">PIN Lock</div><div class="ssub">Protect your app</div></div></div>
+    <div class="pcard">
+      <div class="prow" onclick="togglePinLock()">
+        <div class="pleft"><div class="pico">🔐</div><div><div class="ptit">PIN Lock</div><div class="psub2">Secure your app</div></div></div>
         <div class="tog" id="pinTog"></div>
       </div>
-      <div class="srow" onclick="openChangePIN()">
-        <div class="sleft"><div class="sico">🔑</div><div><div class="stit">Change PIN</div><div class="ssub">Current: ••••</div></div></div>
-        <div class="sright">›</div>
+      <div class="prow" onclick="openChangePIN()">
+        <div class="pleft"><div class="pico">🔑</div><div><div class="ptit">Change PIN</div><div class="psub2">Update your PIN</div></div></div>
+        <div class="pright">›</div>
       </div>
     </div>
-    <div class="scard">
-      <div class="srow" onclick="this.querySelector('.tog').classList.toggle('on');toast('🔔 Notifications updated!')">
-        <div class="sleft"><div class="sico">🔔</div><div><div class="stit">Notifications</div><div class="ssub">Task reminders</div></div></div>
-        <div class="tog on"></div>
+    <div class="pcard">
+      <div class="prow" onclick="exportData()">
+        <div class="pleft"><div class="pico">📤</div><div><div class="ptit">Export Data</div><div class="psub2">Download backup</div></div></div>
+        <div class="pright">›</div>
       </div>
-      <div class="srow" onclick="exportData()">
-        <div class="sleft"><div class="sico">📤</div><div><div class="stit">Export Data</div><div class="ssub">Download JSON</div></div></div>
-        <div class="sright">›</div>
-      </div>
-      <div class="srow" onclick="clearAll()">
-        <div class="sleft"><div class="sico">🗑️</div><div><div class="stit" style="color:var(--red)">Clear All Tasks</div><div class="ssub">Remove everything</div></div></div>
-        <div class="sright" style="color:var(--red)">›</div>
+      <div class="prow" onclick="clearAll()">
+        <div class="pleft"><div class="pico">🗑️</div><div><div class="ptit" style="color:var(--red)">Clear All Tasks</div><div class="psub2">Remove everything</div></div></div>
+        <div class="pright" style="color:var(--red)">›</div>
       </div>
     </div>
-    <div style="text-align:center;color:var(--sub);font-size:11px;padding:6px 0 20px">DayZy v3.0 • Made with ❤️</div>
+    <div style="text-align:center;color:var(--sub);font-size:11px;padding:6px 0 24px">DayZy v4.0 • Made with ❤️</div>
   </div>
   <div class="bnav">
-    <button class="nb" onclick="navGo('homeScr',0)"><svg viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg><span>Home</span></button>
+    <button class="nb" onclick="navGo('homeScr',0)"><svg viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1z"/><path d="M9 21V12h6v9"/></svg><span>Home</span></button>
     <button class="nb" onclick="navGo('calScr',1)"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg><span>Calendar</span></button>
     <button class="nb" onclick="navGo('pomScr',2)"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg><span>Timer</span></button>
     <button class="nb" onclick="navGo('statsScr',3)"><svg viewBox="0 0 24 24"><path d="M3 20h18M8 20V8m4 12V4m4 16v-8"/></svg><span>Stats</span></button>
@@ -566,13 +769,16 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Nunito',sans-serif
   </div>
 </div>
 
-<!-- ======== ADD SCREEN ======== -->
+<!-- ═══════════ ADD TASK SCREEN ═══════════ -->
 <div class="scr" id="addScr">
-  <div class="sbar"><span class="sbar-t">9:41</span><span class="sbar-i">●●● 📶 🔋</span></div>
-  <div class="add-hdr"><button class="back-btn" onclick="go('homeScr')">←</button><div class="add-title" id="addTitle">Add New Task</div></div>
+  <div class="sb"><span class="sb-t">9:41</span><span class="sb-i">●●● 📶 🔋</span></div>
+  <div class="addhdr">
+    <button class="backbtn" onclick="go('homeScr')">←</button>
+    <div class="addtit" id="addTit">Add New Task</div>
+  </div>
   <div class="fscroll">
     <input type="hidden" id="editId">
-    <div class="fg"><label class="flbl">Task Name</label><input class="finp" id="tName" placeholder="Enter task name..."></div>
+    <div class="fg"><label class="flbl">Task Name</label><input class="finp" id="tName" placeholder="e.g. Morning run..."></div>
     <div class="fg"><label class="flbl">Date</label><input class="finp" type="date" id="tDate"></div>
     <div class="fg trow">
       <div><label class="flbl">Start</label><input class="finp" type="time" id="tStart" value="09:00"></div>
@@ -605,42 +811,46 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Nunito',sans-serif
     </div>
     <div class="fg"><label class="flbl">📝 Sub-tasks</label>
       <div class="stlist" id="fmSubs"></div>
-      <div class="stadd">
+      <div class="starow">
         <input class="stinp" id="stInp" placeholder="Add sub-task..." onkeydown="if(event.key==='Enter')addSub()">
         <button class="staddb" onclick="addSub()">+</button>
       </div>
     </div>
-    <div class="fg"><label class="flbl">Notes</label><textarea class="finp" id="tNotes" rows="3" style="resize:none" placeholder="Optional..."></textarea></div>
+    <div class="fg"><label class="flbl">Notes</label><textarea class="finp" id="tNotes" rows="3" style="resize:none" placeholder="Optional notes..."></textarea></div>
   </div>
-  <div class="ffooter"><button class="btn-full" id="saveBtnT" onclick="saveTask()">✨ Save Task</button></div>
+  <div class="ffooter"><button class="btnfull" onclick="saveTask()">✨ Save Task</button></div>
 </div>
 
-<!-- ======== MODALS ======== -->
+<!-- ═══════════ MODALS ═══════════ -->
+<!-- Task Detail -->
 <div class="ov" id="taskOv" onclick="closeOv(event,'taskOv')">
   <div class="mbox">
     <div class="mhdl"></div>
-    <div class="mtit" id="mdName"></div>
-    <div style="font-size:11px;color:var(--sub);margin-bottom:7px" id="mdTime"></div>
-    <div id="mdTags" style="margin-bottom:7px"></div>
-    <div style="font-size:12px;color:var(--sub);margin-bottom:5px" id="mdNotes"></div>
-    <div id="mdSubs" class="mst-list"></div>
+    <div class="mtit" id="mdNm"></div>
+    <div style="font-size:12px;color:var(--sub);margin-bottom:8px" id="mdTm"></div>
+    <div id="mdTags" style="margin-bottom:8px"></div>
+    <div style="font-size:13px;color:var(--sub);margin-bottom:6px" id="mdNotes"></div>
+    <div class="mslist" id="mdSubs"></div>
     <div class="macts">
-      <button class="mbtn mb-ok" onclick="completeTask()">✅</button>
-      <button class="mbtn mb-ed" onclick="editTask()">✏️ Edit</button>
-      <button class="mbtn mb-dl" onclick="delTask()">🗑</button>
+      <button class="mbtn mbok" onclick="completeTask()">✅ Done</button>
+      <button class="mbtn mbed" onclick="editTask()">✏️ Edit</button>
+      <button class="mbtn mbdl" onclick="delTask()">🗑 Delete</button>
     </div>
   </div>
 </div>
 
+<!-- Language -->
 <div class="ov" id="langOv" onclick="closeOv(event,'langOv')">
-  <div class="mbox"><div class="mhdl"></div><div class="mtit">🌍 Select Language</div><div class="ll" id="langList"></div></div>
+  <div class="mbox"><div class="mhdl"></div><div class="mtit">🌍 Language</div><div class="llist" id="langList"></div></div>
 </div>
 
+<!-- Change PIN -->
 <div class="ov" id="pinChOv" onclick="closeOv(event,'pinChOv')">
   <div class="mbox"><div class="mhdl"></div><div class="mtit">🔑 Change PIN</div>
     <div class="pcbody">
-      <div style="font-size:12px;color:var(--sub);text-align:center" id="pcHint">Enter new 4-digit PIN</div>
+      <div style="font-size:13px;color:var(--sub);text-align:center" id="pcHint">Enter new 4-digit PIN</div>
       <div class="pcdots"><div class="pcd" id="pcd0"></div><div class="pcd" id="pcd1"></div><div class="pcd" id="pcd2"></div><div class="pcd" id="pcd3"></div></div>
+      <div style="color:var(--red);font-size:12px;font-weight:700;min-height:18px;text-align:center" id="pcErr"></div>
       <div class="pcpad">
         <button class="pck" onclick="pcIn('1')">1</button><button class="pck" onclick="pcIn('2')">2</button><button class="pck" onclick="pcIn('3')">3</button>
         <button class="pck" onclick="pcIn('4')">4</button><button class="pck" onclick="pcIn('5')">5</button><button class="pck" onclick="pcIn('6')">6</button>
@@ -651,102 +861,91 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:'Nunito',sans-serif
   </div>
 </div>
 
+<!-- Edit Profile -->
 <div class="ov" id="editProfOv" onclick="closeOv(event,'editProfOv')">
   <div class="mbox"><div class="mhdl"></div><div class="mtit">✏️ Edit Profile</div>
-    <div class="eav-prev" id="eavPrev" onclick="cycleAv()"></div>
-    <div class="av-row" id="avRow"></div>
-    <div class="fg"><label class="flbl">Your Name</label><input class="finp" id="editNm" placeholder="Enter your name"></div>
+    <div class="eavprev" id="eavPrev" onclick="cycleAv()"></div>
+    <div class="avrow" id="avRow"></div>
+    <div class="fg"><label class="flbl">Name</label><input class="finp" id="editNm" placeholder="Your name"></div>
     <div class="fg"><label class="flbl">Email</label><input class="finp" id="editEm" placeholder="you@dayzy.app" type="email"></div>
-    <button class="btn-full" onclick="saveProf()" style="margin-top:6px">💾 Save Profile</button>
+    <button class="btnfull" onclick="saveProf()" style="margin-top:6px">💾 Save Profile</button>
   </div>
 </div>
-</div>
+
+</div><!-- #app -->
 
 <script>
-// ============ STORAGE ============
+// ══════════════════════════════════════
+// STORAGE
+// ══════════════════════════════════════
 const LS={
-  get(k,d=null){try{const v=localStorage.getItem('dz_'+k);return v!==null?JSON.parse(v):d}catch(e){return d}},
-  set(k,v){try{localStorage.setItem('dz_'+k,JSON.stringify(v))}catch(e){}}
+  get(k,d=null){try{const v=localStorage.getItem('dz4_'+k);return v!==null?JSON.parse(v):d}catch{return d}},
+  set(k,v){try{localStorage.setItem('dz4_'+k,JSON.stringify(v))}catch{}}
 };
 
-// ============ DATE HELPERS ============
+// ══════════════════════════════════════
+// HELPERS
+// ══════════════════════════════════════
 function ds(off=0){const d=new Date();d.setDate(d.getDate()+off);return d.toISOString().split('T')[0]}
-function fmtDate(s){try{const d=new Date(s+'T00:00');return d.toLocaleDateString(undefined,{weekday:'long',month:'short',day:'numeric'})}catch(e){return s}}
+function fmtD(s){try{return new Date(s+'T00:00').toLocaleDateString(undefined,{weekday:'long',month:'short',day:'numeric'})}catch{return s}}
 
-// ============ DATA ============
+// ══════════════════════════════════════
+// AVATARS
+// ══════════════════════════════════════
+const AVS=[
+  {url:'https://i.ibb.co/Q7rK88j6/Adult-Boy-Icon-Dayzy.png',   l:'Adult Boy'},
+  {url:'https://i.ibb.co/FkkxKNQp/Adult-Girl-Icon-Dayzy.png',  l:'Adult Girl'},
+  {url:'https://i.ibb.co/dwswz9Vd/Boy-Icon-Dayzy.png',         l:'Boy'},
+  {url:'https://i.ibb.co/CKdz7Bmp/Girl-Icon-Dayzy.png',        l:'Girl'},
+  {url:'https://i.ibb.co/zz32t39/Grandfather-Icon-Dayzy.png',  l:'Grandfather'},
+  {url:'https://i.ibb.co/8LRqB2hm/Grandmother-Icon-Dayzy.png', l:'Grandmother'},
+  {url:'https://i.ibb.co/Q73wVtKx/Men-Icon-Dayzy.png',         l:'Men'},
+  {url:'https://i.ibb.co/PsJxb0Z6/Office-Lady-Icon-Dayzy.png', l:'Office Lady'},
+  {url:'https://i.ibb.co/d4pf7MmR/Office-Ledy-1-Icon-Dayzy.png',l:'Office Lady 2'},
+  {url:'https://i.ibb.co/9kXw3RrD/Office-Men-Icon-Dayzy.png',  l:'Office Men'},
+  {url:'https://i.ibb.co/QF3szKzy/Women-Icon-Dayzy.png',       l:'Women'},
+];
+
+// ══════════════════════════════════════
+// DATA
+// ══════════════════════════════════════
 let tasks=LS.get('tasks',[
-  {id:1,name:'Morning Exercise',date:ds(),start:'06:00',end:'06:45',cat:'fitness',prio:'high',notes:'30 min yoga',done:false,canceled:false,recur:'daily',subs:[{id:1,txt:'Warm up',done:false},{id:2,txt:'Yoga 20 min',done:false}]},
+  {id:1,name:'Morning Exercise',date:ds(),start:'06:00',end:'06:45',cat:'fitness',prio:'high',notes:'30 min yoga',done:false,canceled:false,recur:'daily',subs:[{id:1,tx:'Warm up',done:false},{id:2,tx:'Yoga 20 min',done:false}]},
   {id:2,name:'Review Project Report',date:ds(),start:'09:00',end:'10:00',cat:'work',prio:'high',notes:'Check Q4 data',done:false,canceled:false,recur:'none',subs:[]},
-  {id:3,name:'Grocery Shopping',date:ds(),start:'11:00',end:'11:30',cat:'home',prio:'medium',notes:'Buy vegetables',done:true,canceled:false,recur:'weekly',subs:[{id:1,txt:'Vegetables',done:true},{id:2,txt:'Milk',done:false}]},
+  {id:3,name:'Grocery Shopping',date:ds(),start:'11:00',end:'11:30',cat:'home',prio:'medium',notes:'',done:true,canceled:false,recur:'weekly',subs:[{id:1,tx:'Vegetables',done:true},{id:2,tx:'Milk',done:false}]},
   {id:4,name:'Team Standup',date:ds(),start:'10:00',end:'10:30',cat:'work',prio:'medium',notes:'',done:false,canceled:false,recur:'daily',subs:[]},
   {id:5,name:'Read 20 Pages',date:ds(),start:'21:00',end:'21:30',cat:'study',prio:'low',notes:'Atomic Habits',done:false,canceled:false,recur:'daily',subs:[]},
 ]);
-let cfg=LS.get('cfg',{dark:false,pin:'1234',pinOn:true,lang:'en',accent:'default',name:'User',email:'user@dayzy.app',av:AVATARS()[0].url,pomSess:0,focusMins:0,streak:1});
-let nid=LS.get('nid',10),nsid=10,selTask=null;
+
+// cfg.setup: false = first time, true = already set up
+let cfg=LS.get('cfg',{setup:false,pinOn:false,pin:'',dark:false,lang:'en',accent:'default',name:'User',email:'user@dayzy.app',av:AVS[0].url,pomSess:0,focusMins:0,streak:1});
+let nid=LS.get('nid',10),nsid=10,selTk=null;
 let sCat='work',sPrio='high',sRec='none',fmSubs=[];
 let calM,calY,calSel;
-let pinBuf='',pcBuf='',pcStep='new',pcTmp='';
+let pBuf='',pcBuf='',pcStep='new',pcTmp='';
+let spBuf='',spStep='create',spTmp='';
 let pomIv=null,pomOn=false,pomSec=25*60,pomTotal=25*60,pomMode='focus',pomDone=0;
 const POM={focus:25*60,short:5*60,long:15*60};
-let editAv='';
-
-function AVATARS(){return[
-  {url:'https://i.ibb.co/Q7rK88j6/Adult-Boy-Icon-Dayzy.png',lbl:'Adult Boy'},
-  {url:'https://i.ibb.co/FkkxKNQp/Adult-Girl-Icon-Dayzy.png',lbl:'Adult Girl'},
-  {url:'https://i.ibb.co/dwswz9Vd/Boy-Icon-Dayzy.png',lbl:'Boy'},
-  {url:'https://i.ibb.co/CKdz7Bmp/Girl-Icon-Dayzy.png',lbl:'Girl'},
-  {url:'https://i.ibb.co/zz32t39/Grandfather-Icon-Dayzy.png',lbl:'Grandfather'},
-  {url:'https://i.ibb.co/8LRqB2hm/Grandmother-Icon-Dayzy.png',lbl:'Grandmother'},
-  {url:'https://i.ibb.co/Q73wVtKx/Men-Icon-Dayzy.png',lbl:'Men'},
-  {url:'https://i.ibb.co/PsJxb0Z6/Office-Lady-Icon-Dayzy.png',lbl:'Office Lady'},
-  {url:'https://i.ibb.co/d4pf7MmR/Office-Ledy-1-Icon-Dayzy.png',lbl:'Office Lady 2'},
-  {url:'https://i.ibb.co/9kXw3RrD/Office-Men-Icon-Dayzy.png',lbl:'Office Men'},
-  {url:'https://i.ibb.co/QF3szKzy/Women-Icon-Dayzy.png',lbl:'Women'},
-];}
+let editAv=AVS[0].url;
 
 function save(){LS.set('tasks',tasks);LS.set('cfg',cfg);LS.set('nid',nid)}
 
-// ============ LANGUAGES ============
+// ══════════════════════════════════════
+// LANGUAGES
+// ══════════════════════════════════════
 const LANGS={
-  en:{flag:'🇺🇸',name:'English',s:{hi:'Hi, {n} 👋',sub:"Let's make today productive",myTask:'My Task',todTask:'Today Task',viewAll:'View All',todProg:"Today's Progress",done:'Completed',pending:'Pending',canceled:'Canceled',ongoing:'On Going',stats:'📊 Statistics',statsSub:'Your task overview',weekly:'Weekly Activity',dm:'Dark Mode',lang:'Language',pin:'PIN Lock',addTask:'Add New Task',editTask:'Edit Task',save:'✨ Save Task',wrong:'Wrong PIN!',pinOk:'✅ PIN changed!',added:'Task added! 🎉',updated:'Task updated!',deleted:'Task deleted 🗑',completed:'Task completed! ✅',cleared:'All tasks cleared',home:'Home',calendar:'Calendar',timer:'Timer',statsLbl:'Stats',profile:'Profile'}},
-  hi:{flag:'🇮🇳',name:'हिन्दी',s:{hi:'{n} जी, नमस्ते 👋',sub:'आज का दिन उत्पादक बनाएं',myTask:'मेरे काम',todTask:'आज के काम',viewAll:'सभी देखें',todProg:'आज की प्रगति',done:'पूर्ण',pending:'बाकी',canceled:'रद्द',ongoing:'जारी',stats:'📊 आंकड़े',statsSub:'कामों का सारांश',weekly:'साप्ताहिक',dm:'डार्क मोड',lang:'भाषा',pin:'PIN लॉक',addTask:'नया काम',editTask:'काम संपादित करें',save:'✨ सहेजें',wrong:'गलत PIN!',pinOk:'✅ PIN बदला!',added:'काम जुड़ा! 🎉',updated:'काम अपडेट!',deleted:'काम हटा 🗑',completed:'काम पूरा! ✅',cleared:'सब काम हटाए',home:'होम',calendar:'कैलेंडर',timer:'टाइमर',statsLbl:'आंकड़े',profile:'प्रोफ़ाइल'}},
-  ur:{flag:'🇵🇰',name:'اردو',s:{hi:'{n}، ہیلو 👋',sub:'آج کا دن نتیجہ خیز بنائیں',myTask:'میرے کام',todTask:'آج کے کام',viewAll:'سب دیکھیں',todProg:'آج کی پیشرفت',done:'مکمل',pending:'باقی',canceled:'منسوخ',ongoing:'جاری',stats:'📊 اعداد',statsSub:'خلاصہ',weekly:'ہفتہ وار',dm:'ڈارک موڈ',lang:'زبان',pin:'PIN لاک',addTask:'نیا کام',editTask:'ترمیم',save:'✨ محفوظ',wrong:'غلط PIN!',pinOk:'✅ PIN بدلا!',added:'کام شامل! 🎉',updated:'کام اپڈیٹ!',deleted:'کام حذف 🗑',completed:'کام مکمل! ✅',cleared:'سب کام حذف',home:'ہوم',calendar:'کیلنڈر',timer:'ٹائمر',statsLbl:'اعداد',profile:'پروفائل'}},
-  ar:{flag:'🇸🇦',name:'العربية',s:{hi:'مرحباً {n} 👋',sub:'لنجعل اليوم منتجاً',myTask:'مهامي',todTask:'مهام اليوم',viewAll:'عرض الكل',todProg:'تقدم اليوم',done:'مكتمل',pending:'معلق',canceled:'ملغى',ongoing:'جارٍ',stats:'📊 إحصائيات',statsSub:'نظرة عامة',weekly:'أسبوعي',dm:'الوضع الداكن',lang:'اللغة',pin:'قفل PIN',addTask:'إضافة مهمة',editTask:'تعديل',save:'✨ حفظ',wrong:'PIN خاطئ!',pinOk:'✅ تم!',added:'تمت! 🎉',updated:'تم التحديث!',deleted:'تم الحذف 🗑',completed:'اكتملت! ✅',cleared:'تم مسح الكل',home:'الرئيسية',calendar:'التقويم',timer:'المؤقت',statsLbl:'إحصائيات',profile:'الملف'}},
-  es:{flag:'🇪🇸',name:'Español',s:{hi:'¡Hola, {n}! 👋',sub:'Hagamos hoy productivo',myTask:'Mis Tareas',todTask:'Hoy',viewAll:'Ver Todo',todProg:'Progreso',done:'Completado',pending:'Pendiente',canceled:'Cancelado',ongoing:'En Curso',stats:'📊 Estadísticas',statsSub:'Resumen',weekly:'Semanal',dm:'Modo Oscuro',lang:'Idioma',pin:'PIN',addTask:'Nueva Tarea',editTask:'Editar',save:'✨ Guardar',wrong:'PIN incorrecto!',pinOk:'✅ PIN cambiado!',added:'¡Añadida! 🎉',updated:'¡Actualizada!',deleted:'Eliminada 🗑',completed:'¡Completada! ✅',cleared:'Todo borrado',home:'Inicio',calendar:'Calendario',timer:'Temporizador',statsLbl:'Estadísticas',profile:'Perfil'}},
-  fr:{flag:'🇫🇷',name:'Français',s:{hi:'Bonjour {n} 👋',sub:'Soyons productifs',myTask:'Mes Tâches',todTask:"Aujourd'hui",viewAll:'Voir Tout',todProg:'Progrès',done:'Terminé',pending:'En Attente',canceled:'Annulé',ongoing:'En Cours',stats:'📊 Statistiques',statsSub:'Aperçu',weekly:'Hebdomadaire',dm:'Mode Sombre',lang:'Langue',pin:'PIN',addTask:'Nouvelle Tâche',editTask:'Modifier',save:'✨ Enregistrer',wrong:'PIN incorrect!',pinOk:'✅ PIN modifié!',added:'Ajoutée! 🎉',updated:'Modifiée!',deleted:'Supprimée 🗑',completed:'Terminée! ✅',cleared:'Tout effacé',home:'Accueil',calendar:'Calendrier',timer:'Minuterie',statsLbl:'Statistiques',profile:'Profil'}},
+  en:{flag:'🇺🇸',name:'English',   s:{hi:'Hi, {n} 👋',sub:"Let's make today count!",myT:'My Task',todT:"Today's Tasks",viewAll:'View All',todP:"Today's Progress",done:'Completed',pend:'Pending',can:'Canceled',go:'On Going'}},
+  hi:{flag:'🇮🇳',name:'हिन्दी',     s:{hi:'{n} जी 👋',sub:'आज उत्पादक बनाएं',myT:'मेरे काम',todT:'आज के काम',viewAll:'सभी देखें',todP:'आज की प्रगति',done:'पूर्ण',pend:'बाकी',can:'रद्द',go:'जारी'}},
+  ur:{flag:'🇵🇰',name:'اردو',       s:{hi:'{n}، ہیلو 👋',sub:'آج نتیجہ خیز بنائیں',myT:'میرے کام',todT:'آج کے کام',viewAll:'سب دیکھیں',todP:'آج کی پیشرفت',done:'مکمل',pend:'باقی',can:'منسوخ',go:'جاری'}},
+  ar:{flag:'🇸🇦',name:'العربية',    s:{hi:'مرحباً {n} 👋',sub:'لنجعل اليوم منتجاً',myT:'مهامي',todT:'مهام اليوم',viewAll:'عرض الكل',todP:'تقدم اليوم',done:'مكتمل',pend:'معلق',can:'ملغى',go:'جارٍ'}},
+  es:{flag:'🇪🇸',name:'Español',    s:{hi:'¡Hola {n}! 👋',sub:'Hagamos hoy productivo',myT:'Mis Tareas',todT:'Hoy',viewAll:'Ver Todo',todP:'Progreso',done:'Completado',pend:'Pendiente',can:'Cancelado',go:'En Curso'}},
+  fr:{flag:'🇫🇷',name:'Français',   s:{hi:'Bonjour {n} 👋',sub:'Soyons productifs',myT:'Mes Tâches',todT:"Aujourd'hui",viewAll:'Voir Tout',todP:'Progrès',done:'Terminé',pend:'En Attente',can:'Annulé',go:'En Cours'}},
 };
-function T(k){const s=(LANGS[cfg.lang]||LANGS.en).s;let v=s[k]||LANGS.en.s[k]||k;return v.replace('{n}',cfg.name||'User')}
+function T(k){const s=(LANGS[cfg.lang]||LANGS.en).s;return(s[k]||LANGS.en.s[k]||k).replace('{n}',cfg.name||'User')}
 
-// ============ PIN ============
-function pIn(d){
-  if(pinBuf.length>=4)return;
-  pinBuf+=d;updDots('pd',pinBuf,4);
-  if(pinBuf.length===4){
-    setTimeout(()=>{
-      if(!cfg.pinOn||pinBuf===cfg.pin){pinBuf='';updDots('pd','',4);go('homeScr')}
-      else{document.getElementById('pinErr').textContent=T('wrong');pinBuf='';setTimeout(()=>{updDots('pd','',4);document.getElementById('pinErr').textContent=''},700)}
-    },200);
-  }
-}
-function pDel(){pinBuf=pinBuf.slice(0,-1);updDots('pd',pinBuf,4)}
-function updDots(pfx,v,n){for(let i=0;i<n;i++){const e=document.getElementById(pfx+i);if(e)e.classList.toggle('fill',i<v.length)}}
-
-function pcIn(d){
-  if(pcBuf.length>=4)return;
-  pcBuf+=d;updDots('pcd',pcBuf,4);
-  if(pcBuf.length===4){
-    setTimeout(()=>{
-      if(pcStep==='new'){pcTmp=pcBuf;pcBuf='';pcStep='confirm';document.getElementById('pcHint').textContent='Confirm new PIN';updDots('pcd','',4)}
-      else if(pcBuf===pcTmp){cfg.pin=pcBuf;save();closeOvById('pinChOv');toast(T('pinOk'));pcBuf='';pcStep='new';pcTmp=''}
-      else{document.getElementById('pcHint').textContent='Mismatch! Retry';pcBuf='';pcTmp='';pcStep='new';setTimeout(()=>{updDots('pcd','',4);document.getElementById('pcHint').textContent='Enter new PIN'},800)}
-    },200);
-  }
-}
-function pcDel(){pcBuf=pcBuf.slice(0,-1);updDots('pcd',pcBuf,4)}
-function openChangePIN(){pcBuf='';pcStep='new';pcTmp='';updDots('pcd','',4);document.getElementById('pcHint').textContent='Enter new 4-digit PIN';document.getElementById('pinChOv').classList.add('on')}
-function togglePinLock(){cfg.pinOn=!cfg.pinOn;save();document.getElementById('pinTog').classList.toggle('on',cfg.pinOn);toast(cfg.pinOn?'🔐 PIN Lock ON':'🔓 PIN Lock OFF')}
-
-// ============ NAVIGATION ============
+// ══════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════
 function go(id){
   document.querySelectorAll('.scr').forEach(s=>s.classList.remove('on'));
   document.getElementById(id).classList.add('on');
@@ -754,120 +953,208 @@ function go(id){
   if(id==='calScr')renderCal();
   if(id==='statsScr')renderStats();
   if(id==='pomScr')buildPomSel();
-  if(id==='profScr'){renderProfStats();buildSwatches()}
+  if(id==='profScr'){renderProfSt();buildSwatches()}
 }
-function navGo(id,idx){
-  document.querySelectorAll('.nb').forEach(b=>b.classList.remove('on'));
-  document.querySelectorAll('.nb')[idx]&&document.querySelectorAll('.nb')[idx].classList.add('on');
+function navGo(id,i){
+  document.querySelectorAll('.bnav .nb').forEach((b,j)=>b.classList.toggle('on',j===i));
   go(id);
 }
 
-// ============ DATE STRIP ============
+// ══════════════════════════════════════
+// SETUP PIN (First Time)
+// ══════════════════════════════════════
+function skipSetup(){cfg.setup=true;cfg.pinOn=false;save();go('homeScr')}
+
+function spIn(d){
+  if(spBuf.length>=4)return;
+  spBuf+=d;updD('spd',spBuf,4);
+  if(spBuf.length===4){
+    setTimeout(()=>{
+      if(spStep==='create'){
+        spTmp=spBuf;spBuf='';spStep='confirm';
+        updD('spd','',4);
+        document.getElementById('spBadge').textContent='STEP 2 OF 2';
+        document.getElementById('spTitle').textContent='Confirm your PIN';
+        document.getElementById('spSub').textContent='Re-enter the same PIN to confirm';
+        document.getElementById('spErr').textContent='';
+      } else {
+        if(spBuf===spTmp){
+          cfg.pin=spBuf;cfg.pinOn=true;cfg.setup=true;save();
+          spBuf='';spTmp='';spStep='create';
+          // reset for next open
+          document.getElementById('spBadge').textContent='STEP 1 OF 2';
+          document.getElementById('spTitle').textContent='Create your PIN';
+          document.getElementById('spSub').textContent='Choose a 4-digit PIN to lock your app';
+          updD('spd','',4);
+          toast('🔐 PIN set! App is now secured');
+          go('homeScr');
+        } else {
+          document.getElementById('spErr').textContent="PINs don't match! Start over";
+          spBuf='';spTmp='';spStep='create';
+          document.getElementById('spBadge').textContent='STEP 1 OF 2';
+          document.getElementById('spTitle').textContent='Create your PIN';
+          document.getElementById('spSub').textContent='Choose a 4-digit PIN to lock your app';
+          setTimeout(()=>{updD('spd','',4);document.getElementById('spErr').textContent=''},1200);
+        }
+      }
+    },180);
+  }
+}
+function spDel(){spBuf=spBuf.slice(0,-1);updD('spd',spBuf,4)}
+
+// ══════════════════════════════════════
+// ENTER PIN
+// ══════════════════════════════════════
+function pIn(d){
+  if(pBuf.length>=4)return;
+  pBuf+=d;updD('pd',pBuf,4);
+  if(pBuf.length===4){
+    setTimeout(()=>{
+      if(pBuf===cfg.pin){pBuf='';updD('pd','',4);go('homeScr')}
+      else{
+        document.getElementById('pinErr').textContent='Wrong PIN! Try again';
+        pBuf='';
+        setTimeout(()=>{updD('pd','',4);document.getElementById('pinErr').textContent=''},800);
+      }
+    },180);
+  }
+}
+function pDel(){pBuf=pBuf.slice(0,-1);updD('pd',pBuf,4)}
+
+// CHANGE PIN (from Profile)
+function pcIn(d){
+  if(pcBuf.length>=4)return;
+  pcBuf+=d;updD('pcd',pcBuf,4);
+  if(pcBuf.length===4){
+    setTimeout(()=>{
+      if(pcStep==='new'){pcTmp=pcBuf;pcBuf='';pcStep='confirm';document.getElementById('pcHint').textContent='Confirm new PIN';document.getElementById('pcErr').textContent='';updD('pcd','',4)}
+      else if(pcBuf===pcTmp){
+        cfg.pin=pcBuf;save();closeOvId('pinChOv');
+        toast('✅ PIN updated!');pcBuf='';pcStep='new';pcTmp='';
+      } else {
+        document.getElementById('pcErr').textContent="PINs don't match";
+        pcBuf='';pcTmp='';pcStep='new';
+        setTimeout(()=>{updD('pcd','',4);document.getElementById('pcErr').textContent='';document.getElementById('pcHint').textContent='Enter new 4-digit PIN'},900);
+      }
+    },180);
+  }
+}
+function pcDel(){pcBuf=pcBuf.slice(0,-1);updD('pcd',pcBuf,4)}
+function openChangePIN(){pcBuf='';pcStep='new';pcTmp='';updD('pcd','',4);document.getElementById('pcHint').textContent='Enter new 4-digit PIN';document.getElementById('pcErr').textContent='';document.getElementById('pinChOv').classList.add('on')}
+function togglePinLock(){
+  if(!cfg.pin&&!cfg.pinOn){go('setPinScr');return}
+  cfg.pinOn=!cfg.pinOn;save();
+  document.getElementById('pinTog').classList.toggle('on',cfg.pinOn);
+  toast(cfg.pinOn?'🔐 PIN Lock ON':'🔓 PIN Lock OFF');
+}
+function updD(pfx,v,n){for(let i=0;i<n;i++){const e=document.getElementById(pfx+i);if(e)e.classList.toggle('on',i<v.length)}}
+
+// ══════════════════════════════════════
+// DATE STRIP
+// ══════════════════════════════════════
 function buildDates(){
   const strip=document.getElementById('dstrip'),days=['SUN','MON','TUE','WED','THU','FRI','SAT'],today=ds();
   strip.innerHTML='';
-  for(let i=-2;i<=7;i++){
+  for(let i=-3;i<=8;i++){
     const d=new Date();d.setDate(d.getDate()+i);
     const str=d.toISOString().split('T')[0];
     const el=document.createElement('div');
     el.className='dc'+(str===today?' tod':'');
     el.innerHTML=`<div class="dn">${days[d.getDay()]}</div><div class="dd">${d.getDate()}</div>`;
-    el.onclick=()=>{document.querySelectorAll('.dc').forEach(c=>c.classList.remove('tod'));el.classList.add('tod')};
     strip.appendChild(el);
+    if(str===today)setTimeout(()=>el.scrollIntoView({block:'nearest',inline:'center',behavior:'smooth'}),50);
   }
 }
 
-// ============ TASKS ============
+// ══════════════════════════════════════
+// TASKS
+// ══════════════════════════════════════
 function renderTasks(q=''){
   const list=document.getElementById('taskList'),today=ds();
   let arr=tasks.filter(t=>t.date===today&&!t.canceled&&t.name.toLowerCase().includes(q.toLowerCase()));
   arr.sort((a,b)=>a.start.localeCompare(b.start));
-  list.innerHTML=arr.length?arr.map(tk=>taskHTML(tk)).join(''):`<div class="empty"><div class="ei">${q?'🔍':'📭'}</div><p>${q?'No matches found':'No tasks today!<br>Tap + to add one'}</p></div>`;
+  list.innerHTML=arr.length?arr.map(tiHTML).join(''):`<div class="empty"><div class="empty-i">${q?'🔍':'📭'}</div><p>${q?'No matches found':'No tasks today!<br>Tap + to add a task'}</p></div>`;
+  updateStats();
 }
-function taskHTML(tk){
-  const sd=tk.subs?tk.subs.filter(s=>s.done).length:0,st=tk.subs?tk.subs.length:0,sp=st>0?Math.round(sd/st*100):0;
+function tiHTML(tk){
+  const sd=tk.subs?tk.subs.filter(s=>s.done).length:0,st=tk.subs?tk.subs.length:0,sp=st?Math.round(sd/st*100):0;
   return`<div class="ti p${tk.prio[0]}${tk.done?' done':''}" onclick="openTask(${tk.id})">
-    <div class="tname">${tk.name}</div>
-    <div class="ttime">⏰ ${tk.start}–${tk.end}</div>
+    <div class="tnm">${tk.name}</div>
+    <div class="ttm">⏰ ${tk.start}–${tk.end}</div>
     <div class="ttags">
       <span class="tag ${tk.cat}">${tk.cat}</span>
       <span class="tag ${tk.prio}">${tk.prio}</span>
       ${tk.recur&&tk.recur!=='none'?`<span class="tag rec">🔁 ${tk.recur}</span>`:''}
     </div>
-    ${st>0?`<div class="stbar"><div class="stfill" style="width:${sp}%"></div></div>`:''}
-    <button class="t-ck${tk.done?' done':''}" onclick="event.stopPropagation();toggleDone(${tk.id})">${tk.done?'✓':''}</button>
+    ${st?`<div class="stbar"><div class="stfill" style="width:${sp}%"></div></div>`:''}
+    <button class="tck${tk.done?' on':''}" onclick="event.stopPropagation();togDone(${tk.id})">${tk.done?'✓':''}</button>
   </div>`;
 }
-function filterTasks(){renderTasks(document.getElementById('searchInp').value)}
+function filterTasks(){renderTasks(document.getElementById('srchInp').value)}
 function showAll(){
   let arr=tasks.filter(t=>!t.canceled).sort((a,b)=>a.date.localeCompare(b.date)||a.start.localeCompare(b.start));
-  document.getElementById('taskList').innerHTML=arr.length?arr.map(tk=>`<div class="ti p${tk.prio[0]}${tk.done?' done':''}" onclick="openTask(${tk.id})">
-    <div class="tname">${tk.name}</div><div class="ttime">📅 ${tk.date} ⏰ ${tk.start}–${tk.end}</div>
-    <div class="ttags"><span class="tag ${tk.cat}">${tk.cat}</span></div>
-    <button class="t-ck${tk.done?' done':''}" onclick="event.stopPropagation();toggleDone(${tk.id})">${tk.done?'✓':''}</button>
-  </div>`).join(''):`<div class="empty"><div class="ei">📭</div><p>No tasks yet</p></div>`;
+  document.getElementById('taskList').innerHTML=arr.length?arr.map(tiHTML).join(''):`<div class="empty"><div class="empty-i">📭</div><p>No tasks yet</p></div>`;
 }
-function toggleDone(id){
+function togDone(id){
   const tk=tasks.find(t=>t.id===id);if(!tk)return;
-  tk.done=!tk.done;save();renderTasks(document.getElementById('searchInp').value);
-  toast(tk.done?T('completed'):'↩️ Reopened');checkAch();
+  tk.done=!tk.done;save();renderTasks(document.getElementById('srchInp').value);
+  toast(tk.done?'✅ Task completed!':'↩️ Reopened');checkAch();
 }
 function updateStats(){
   const today=ds(),tt=tasks.filter(t=>t.date===today&&!t.canceled);
   const allDone=tasks.filter(t=>t.done).length,allPend=tasks.filter(t=>!t.done&&!t.canceled).length,allCan=tasks.filter(t=>t.canceled).length;
-  document.getElementById('cn0').textContent=allDone;
-  document.getElementById('cn1').textContent=allPend;
-  document.getElementById('cn2').textContent=allCan;
-  document.getElementById('cn3').textContent=allPend;
-  const td=tt.filter(t=>t.done).length,tl=tt.length,pct=tl>0?Math.round(td/tl*100):0;
-  document.getElementById('progC').style.strokeDashoffset=138.2-(138.2*pct/100);
+  ['cn0','cn1','cn2','cn3'].forEach((id,i)=>document.getElementById(id).textContent=[allDone,allPend,allCan,allPend][i]);
+  const td=tt.filter(t=>t.done).length,tl=tt.length,pct=tl?Math.round(td/tl*100):0;
+  document.getElementById('progC').style.strokeDashoffset=138.2*(1-pct/100);
   document.getElementById('progPct').textContent=pct+'%';
   document.getElementById('progSub').textContent=`${td} of ${tl} tasks done`;
 }
 
-// ============ TASK MODAL ============
+// ══════════════════════════════════════
+// TASK MODAL
+// ══════════════════════════════════════
 function openTask(id){
-  selTask=id;const tk=tasks.find(t=>t.id===id);if(!tk)return;
-  document.getElementById('mdName').textContent=tk.name;
-  document.getElementById('mdTime').textContent=`📅 ${tk.date}  ⏰ ${tk.start}–${tk.end}`;
+  selTk=id;const tk=tasks.find(t=>t.id===id);if(!tk)return;
+  document.getElementById('mdNm').textContent=tk.name;
+  document.getElementById('mdTm').textContent=`📅 ${tk.date}  ⏰ ${tk.start}–${tk.end}`;
   document.getElementById('mdTags').innerHTML=`<span class="tag ${tk.cat}">${tk.cat}</span> <span class="tag ${tk.prio}">${tk.prio}</span>${tk.recur&&tk.recur!=='none'?` <span class="tag rec">🔁 ${tk.recur}</span>`:''}`;
   document.getElementById('mdNotes').textContent=tk.notes?'📝 '+tk.notes:'';
   const sl=document.getElementById('mdSubs');
-  sl.innerHTML=tk.subs&&tk.subs.length?`<div style="font-size:10px;font-weight:700;color:var(--sub);margin-bottom:5px">Subtasks (${tk.subs.filter(s=>s.done).length}/${tk.subs.length})</div>`+
-    tk.subs.map(s=>`<div class="mst-i"><button class="mst-ck${s.done?' done':''}" onclick="togSub(${tk.id},${s.id})">${s.done?'✓':''}</button><span class="mst-tx${s.done?' done':''}">${s.txt}</span></div>`).join(''):'';
+  sl.innerHTML=tk.subs&&tk.subs.length
+    ?`<div style="font-size:10px;font-weight:700;color:var(--sub);margin-bottom:6px">Subtasks (${tk.subs.filter(s=>s.done).length}/${tk.subs.length})</div>`
+      +tk.subs.map(s=>`<div class="msi"><button class="msck${s.done?' on':''}" onclick="togSub(${tk.id},${s.id})">${s.done?'✓':''}</button><span class="mstx${s.done?' done':''}">${s.tx}</span></div>`).join(''):'';
   document.getElementById('taskOv').classList.add('on');
 }
 function togSub(tid,sid){
-  const tk=tasks.find(t=>t.id===tid);if(!tk||!tk.subs)return;
+  const tk=tasks.find(t=>t.id===tid);if(!tk)return;
   const s=tk.subs.find(s=>s.id===sid);if(s){s.done=!s.done;save();openTask(tid);renderTasks()}
 }
 function completeTask(){
-  const tk=tasks.find(t=>t.id===selTask);if(tk){tk.done=true;save();renderTasks();toast(T('completed'));checkAch()}
-  closeOvById('taskOv');
+  const tk=tasks.find(t=>t.id===selTk);if(tk){tk.done=true;save();renderTasks();toast('✅ Task completed!');checkAch()}
+  closeOvId('taskOv');
 }
 function delTask(){
-  tasks=tasks.filter(t=>t.id!==selTask);save();renderTasks();renderCal();toast(T('deleted'));closeOvById('taskOv');
+  tasks=tasks.filter(t=>t.id!==selTk);save();renderTasks();renderCal();toast('🗑 Deleted');closeOvId('taskOv');
 }
 function editTask(){
-  closeOvById('taskOv');
-  const tk=tasks.find(t=>t.id===selTask);if(!tk)return;
+  closeOvId('taskOv');
+  const tk=tasks.find(t=>t.id===selTk);if(!tk)return;
   document.getElementById('editId').value=tk.id;
   document.getElementById('tName').value=tk.name;
   document.getElementById('tDate').value=tk.date;
   document.getElementById('tStart').value=tk.start;
   document.getElementById('tEnd').value=tk.end;
   document.getElementById('tNotes').value=tk.notes||'';
-  sCat=tk.cat;sPrio=tk.prio;sRec=tk.recur||'none';
-  fmSubs=[...(tk.subs||[])];
+  sCat=tk.cat;sPrio=tk.prio;sRec=tk.recur||'none';fmSubs=[...(tk.subs||[])];
   document.querySelectorAll('#catChips .chip').forEach(c=>c.className='chip'+(c.dataset.v===tk.cat?' sel':''));
   document.querySelectorAll('#prioChips .chip').forEach(c=>c.className='chip'+(c.dataset.v===tk.prio?` s${tk.prio[0]}`:''));
   document.querySelectorAll('#recChips .chip').forEach(c=>c.className='chip'+(c.dataset.v===(tk.recur||'none')?' sel':''));
-  renderFmSubs();
-  document.getElementById('addTitle').textContent=T('editTask');
-  go('addScr');
+  renderFmSubs();document.getElementById('addTit').textContent='Edit Task';go('addScr');
 }
 
-// ============ ADD TASK ============
+// ══════════════════════════════════════
+// ADD TASK
+// ══════════════════════════════════════
 function openAdd(){
   document.getElementById('editId').value='';
   document.getElementById('tName').value='';
@@ -879,9 +1166,7 @@ function openAdd(){
   document.querySelectorAll('#catChips .chip').forEach(c=>c.className='chip'+(c.dataset.v==='work'?' sel':''));
   document.querySelectorAll('#prioChips .chip').forEach(c=>c.className='chip'+(c.dataset.v==='high'?' sh':''));
   document.querySelectorAll('#recChips .chip').forEach(c=>c.className='chip'+(c.dataset.v==='none'?' sel':''));
-  renderFmSubs();
-  document.getElementById('addTitle').textContent=T('addTask');
-  go('addScr');
+  renderFmSubs();document.getElementById('addTit').textContent='Add New Task';go('addScr');
 }
 function pickChip(btn,grp){
   const ids={cat:'catChips',prio:'prioChips',rec:'recChips'};
@@ -890,185 +1175,174 @@ function pickChip(btn,grp){
   else if(grp==='prio'){sPrio=btn.dataset.v;btn.className=`chip s${btn.dataset.v[0]}`}
   else{sRec=btn.dataset.v;btn.className='chip sel'}
 }
-function addSub(){
-  const v=document.getElementById('stInp').value.trim();if(!v)return;
-  fmSubs.push({id:nsid++,txt:v,done:false});document.getElementById('stInp').value='';renderFmSubs();
-}
+function addSub(){const v=document.getElementById('stInp').value.trim();if(!v)return;fmSubs.push({id:nsid++,tx:v,done:false});document.getElementById('stInp').value='';renderFmSubs()}
 function renderFmSubs(){
   document.getElementById('fmSubs').innerHTML=fmSubs.map((s,i)=>`
     <div class="sti">
-      <div class="stck${s.done?' done':''}" onclick="fmSubCk(${i})">${s.done?'✓':''}</div>
-      <span class="sttxt">${s.txt}</span>
-      <button class="stdel" onclick="fmSubDel(${i})">×</button>
+      <div class="stck${s.done?' on':''}" onclick="fmCk(${i})">${s.done?'✓':''}</div>
+      <span class="sttx">${s.tx}</span>
+      <button class="stdel" onclick="fmDel(${i})">×</button>
     </div>`).join('');
 }
-function fmSubCk(i){fmSubs[i].done=!fmSubs[i].done;renderFmSubs()}
-function fmSubDel(i){fmSubs.splice(i,1);renderFmSubs()}
+function fmCk(i){fmSubs[i].done=!fmSubs[i].done;renderFmSubs()}
+function fmDel(i){fmSubs.splice(i,1);renderFmSubs()}
 function saveTask(){
   const nm=document.getElementById('tName').value.trim();
   if(!nm){toast('⚠️ Enter a task name');return}
   const obj={name:nm,date:document.getElementById('tDate').value||ds(),start:document.getElementById('tStart').value||'09:00',end:document.getElementById('tEnd').value||'10:00',cat:sCat,prio:sPrio,recur:sRec,notes:document.getElementById('tNotes').value.trim(),done:false,canceled:false,subs:[...fmSubs]};
   const eid=parseInt(document.getElementById('editId').value);
-  if(eid){const tk=tasks.find(t=>t.id===eid);if(tk)Object.assign(tk,obj);toast(T('updated'))}
+  if(eid){const tk=tasks.find(t=>t.id===eid);if(tk)Object.assign(tk,obj);toast('✏️ Task updated!')}
   else{
     obj.id=nid++;tasks.push(obj);
-    if(sRec!=='none'){const offs={daily:[1,2,3,4,5,6],weekly:[7,14,21],monthly:[]};(offs[sRec]||[]).forEach(o=>{const fd=new Date(obj.date+'T00:00');fd.setDate(fd.getDate()+o);tasks.push({...obj,id:nid++,date:fd.toISOString().split('T')[0],done:false,subs:fmSubs.map(s=>({...s,id:nsid++,done:false}))})})}
-    toast(T('added'));
+    if(sRec!=='none'){const o={daily:[1,2,3,4,5,6],weekly:[7,14,21],monthly:[30,60]};(o[sRec]||[]).forEach(off=>{const fd=new Date(obj.date+'T00:00');fd.setDate(fd.getDate()+off);tasks.push({...obj,id:nid++,date:fd.toISOString().split('T')[0],done:false,subs:fmSubs.map(s=>({...s,id:nsid++,done:false}))})})}
+    toast('🎉 Task added!');
   }
   save();go('homeScr');
 }
 
-// ============ CALENDAR ============
+// ══════════════════════════════════════
+// CALENDAR
+// ══════════════════════════════════════
 function renderCal(){
   const now=new Date();if(calM===undefined){calM=now.getMonth();calY=now.getFullYear()}
   if(!calSel)calSel=ds();
-  const months=['January','February','March','April','May','June','July','August','September','October','November','December'];
-  document.getElementById('calMn').textContent=`${months[calM]} ${calY}`;
-  document.getElementById('cdnames').innerHTML=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'].map(d=>`<div class="cdn">${d}</div>`).join('');
+  const MNS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+  document.getElementById('calMn').textContent=`${MNS[calM]} ${calY}`;
+  document.getElementById('cdns').innerHTML=['S','M','T','W','T','F','S'].map(d=>`<div class="cdn">${d}</div>`).join('');
   const first=new Date(calY,calM,1).getDay(),total=new Date(calY,calM+1,0).getDate(),today=ds();
   let h='';
   for(let i=0;i<first;i++)h+=`<div class="cc emp"></div>`;
   for(let d=1;d<=total;d++){
     const dstr=`${calY}-${String(calM+1).padStart(2,'0')}-${String(d).padStart(2,'0')}`;
-    const isTod=dstr===today,isSel=dstr===calSel,hasT=tasks.some(t=>t.date===dstr&&!t.canceled);
-    h+=`<div class="cc${isTod?' ctod':''}${isSel&&!isTod?' csel':''}${hasT?' hast':''}" onclick="calPick('${dstr}')">${d}</div>`;
+    const iT=dstr===today,iS=dstr===calSel,hT=tasks.some(t=>t.date===dstr&&!t.canceled);
+    h+=`<div class="cc${iT?' ctod':''}${iS&&!iT?' csel':''}${hT?' hast':''}" onclick="calPick('${dstr}')">${d}</div>`;
   }
   document.getElementById('cgrid').innerHTML=h;
-  calShowDate(calSel);
+  calShow(calSel);
 }
 function calPick(d){calSel=d;renderCal()}
-function calShowDate(d){
-  document.getElementById('calDTitle').textContent=fmtDate(d);
+function calShow(d){
+  document.getElementById('calDT').textContent=fmtD(d);
   const arr=tasks.filter(t=>t.date===d&&!t.canceled);
-  document.getElementById('calTList').innerHTML=arr.length
-    ?arr.map(tk=>`<div class="ti p${tk.prio[0]}${tk.done?' done':''}" onclick="openTask(${tk.id})" style="margin:0 20px 8px">
-        <div class="tname">${tk.name}</div><div class="ttime">⏰ ${tk.start}–${tk.end}</div>
+  document.getElementById('calTL').innerHTML=arr.length
+    ?arr.map(tk=>`<div class="ti p${tk.prio[0]}${tk.done?' done':''}" onclick="openTask(${tk.id})" style="margin:0 20px 10px">
+        <div class="tnm">${tk.name}</div><div class="ttm">⏰ ${tk.start}–${tk.end}</div>
         <div class="ttags"><span class="tag ${tk.cat}">${tk.cat}</span></div>
-        <button class="t-ck${tk.done?' done':''}" onclick="event.stopPropagation();toggleDone(${tk.id})">${tk.done?'✓':''}</button>
+        <button class="tck${tk.done?' on':''}" onclick="event.stopPropagation();togDone(${tk.id})">${tk.done?'✓':''}</button>
       </div>`).join('')
-    :`<div class="empty"><div class="ei">🗓️</div><p>No tasks this day</p></div>`;
+    :`<div class="empty"><div class="empty-i">🗓️</div><p>No tasks this day</p></div>`;
 }
 function calPrev(){calM--;if(calM<0){calM=11;calY--}renderCal()}
 function calNext(){calM++;if(calM>11){calM=0;calY++}renderCal()}
 
-// ============ STATS ============
+// ══════════════════════════════════════
+// STATS
+// ══════════════════════════════════════
 function renderStats(){
-  const total=tasks.length,done=tasks.filter(t=>t.done).length,pend=tasks.filter(t=>!t.done&&!t.canceled).length,can=tasks.filter(t=>t.canceled).length;
+  const total=tasks.length,done=tasks.filter(t=>t.done).length,pend=tasks.filter(t=>!t.done&&!t.canceled).length;
   const days=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
-  const cnts=days.map((_,i)=>{const d=new Date();d.setDate(d.getDate()-(d.getDay()-1)+i);const ds2=d.toISOString().split('T')[0];return tasks.filter(t=>t.date===ds2&&t.done).length});
+  const cnts=days.map((_,i)=>{const d=new Date();d.setDate(d.getDate()-(d.getDay()||7)+i+1);return tasks.filter(t=>t.date===d.toISOString().split('T')[0]&&t.done).length});
   if(cnts.every(c=>c===0))cnts[(new Date().getDay()+6)%7]=done||1;
   const mx=Math.max(...cnts,1),ti=(new Date().getDay()+6)%7;
-  document.getElementById('wbars').innerHTML=days.map((d,i)=>`<div class="bcol"><div class="bfill${i===ti?' act':''}" style="height:${Math.round(cnts[i]/mx*65)}px"></div><div class="bday">${d}</div></div>`).join('');
+  document.getElementById('wbars').innerHTML=days.map((d,i)=>`<div class="bcol"><div class="bfill${i===ti?' act':''}" style="height:${Math.round(cnts[i]/mx*66)}px"></div><div class="bday">${d}</div></div>`).join('');
   document.getElementById('bigStats').innerHTML=`
-    <div class="bst"><div class="bs-l">Total Tasks</div><div class="bs-v">${total}</div><div class="bs-bw"><div class="bs-b" style="width:100%"></div></div></div>
-    <div class="bst"><div class="bs-l">✅ Completed</div><div class="bs-v" style="color:var(--green)">${done}</div><div class="bs-bw"><div class="bs-b g" style="width:${total?Math.round(done/total*100):0}%"></div></div></div>
-    <div class="bst"><div class="bs-l">⏳ Pending</div><div class="bs-v" style="color:var(--orange)">${pend}</div><div class="bs-bw"><div class="bs-b o" style="width:${total?Math.round(pend/total*100):0}%"></div></div></div>
-    <div class="bst"><div class="bs-l">🔥 Streak</div><div class="bs-v" style="color:var(--orange)">${cfg.streak||1} day${cfg.streak!==1?'s':''}</div></div>
-    <div class="bst"><div class="bs-l">⏱️ Focus Time</div><div class="bs-v" style="color:var(--blue)">${Math.floor((cfg.focusMins||0)/60)}h ${(cfg.focusMins||0)%60}m</div></div>`;
+    <div class="bst"><div class="bsl">Total Tasks</div><div class="bsv">${total}</div><div class="bsbw"><div class="bsb" style="width:100%"></div></div></div>
+    <div class="bst"><div class="bsl">✅ Completed</div><div class="bsv" style="color:var(--green)">${done}</div><div class="bsbw"><div class="bsb g" style="width:${total?Math.round(done/total*100):0}%"></div></div></div>
+    <div class="bst"><div class="bsl">⏳ Pending</div><div class="bsv" style="color:var(--orange)">${pend}</div><div class="bsbw"><div class="bsb o" style="width:${total?Math.round(pend/total*100):0}%"></div></div></div>
+    <div class="bst"><div class="bsl">🔥 Streak</div><div class="bsv" style="color:var(--orange)">${cfg.streak||1} days</div></div>
+    <div class="bst"><div class="bsl">⏱️ Focus Time</div><div class="bsv" style="color:var(--blue)">${Math.floor((cfg.focusMins||0)/60)}h ${(cfg.focusMins||0)%60}m</div></div>`;
   const now=new Date(),mt=tasks.filter(t=>{const d=new Date(t.date+'T00:00');return d.getMonth()===now.getMonth()&&d.getFullYear()===now.getFullYear()});
-  const mns=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
-  document.getElementById('mtbl').innerHTML=`<div class="mt-t">📊 ${mns[now.getMonth()]} ${now.getFullYear()} Report</div>
-    <div class="mt-r"><span class="mt-l">Total</span><span class="mt-v">${mt.length}</span></div>
-    <div class="mt-r"><span class="mt-l">✅ Completed</span><span class="mt-v g">${mt.filter(t=>t.done).length}</span></div>
-    <div class="mt-r"><span class="mt-l">⏳ Pending</span><span class="mt-v o">${mt.filter(t=>!t.done&&!t.canceled).length}</span></div>
-    <div class="mt-r"><span class="mt-l">❌ Canceled</span><span class="mt-v r">${mt.filter(t=>t.canceled).length}</span></div>
-    <div class="mt-r"><span class="mt-l">Rate</span><span class="mt-v">${mt.length?Math.round(mt.filter(t=>t.done).length/mt.length*100):0}%</span></div>`;
+  const MNS=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const mDone=mt.filter(t=>t.done).length;
+  document.getElementById('mtbl').innerHTML=`<div class="mtt">📊 ${MNS[now.getMonth()]} ${now.getFullYear()} Report</div>
+    <div class="mtr"><span class="mtl">Total</span><span class="mtv">${mt.length}</span></div>
+    <div class="mtr"><span class="mtl">✅ Completed</span><span class="mtv g">${mDone}</span></div>
+    <div class="mtr"><span class="mtl">⏳ Pending</span><span class="mtv o">${mt.filter(t=>!t.done&&!t.canceled).length}</span></div>
+    <div class="mtr"><span class="mtl">❌ Canceled</span><span class="mtv r">${mt.filter(t=>t.canceled).length}</span></div>
+    <div class="mtr"><span class="mtl">Completion Rate</span><span class="mtv">${mt.length?Math.round(mDone/mt.length*100):0}%</span></div>`;
   renderAch(done);
 }
-
-// ============ ACHIEVEMENTS ============
 const ACHS=[
-  {id:'a1',ico:'🌟',nm:'First Task',desc:'Complete 1 task',ok:d=>d>=1},
-  {id:'a2',ico:'🎯',nm:'Go-Getter',desc:'Complete 5 tasks',ok:d=>d>=5},
-  {id:'a3',ico:'🔥',nm:'On Fire',desc:'Complete 10 tasks',ok:d=>d>=10},
-  {id:'a4',ico:'🏆',nm:'Champion',desc:'Complete 20 tasks',ok:d=>d>=20},
-  {id:'a5',ico:'👑',nm:'Legend',desc:'Complete 50 tasks',ok:d=>d>=50},
-  {id:'a6',ico:'⏱️',nm:'Focused',desc:'Use Pomodoro timer',ok:(_,c)=>(c.pomSess||0)>=1},
-  {id:'a7',ico:'🧠',nm:'Deep Work',desc:'10 Pomodoro sessions',ok:(_,c)=>(c.pomSess||0)>=10},
-  {id:'a8',ico:'📅',nm:'Consistent',desc:'3+ day streak',ok:(_,c)=>(c.streak||1)>=3},
+  {ico:'🌟',nm:'First Task',  desc:'Complete 1 task',     ok:d=>d>=1},
+  {ico:'🎯',nm:'Go-Getter',   desc:'Complete 5 tasks',    ok:d=>d>=5},
+  {ico:'🔥',nm:'On Fire',     desc:'Complete 10 tasks',   ok:d=>d>=10},
+  {ico:'🏆',nm:'Champion',    desc:'Complete 20 tasks',   ok:d=>d>=20},
+  {ico:'👑',nm:'Legend',      desc:'Complete 50 tasks',   ok:d=>d>=50},
+  {ico:'⏱️',nm:'Focused',     desc:'Use Pomodoro timer',  ok:(_,c)=>(c.pomSess||0)>=1},
+  {ico:'🧠',nm:'Deep Work',   desc:'10 Pomodoro sessions',ok:(_,c)=>(c.pomSess||0)>=10},
+  {ico:'📅',nm:'Consistent',  desc:'3+ day streak',       ok:(_,c)=>(c.streak||1)>=3},
 ];
-function renderAch(done){
-  document.getElementById('achGrid').innerHTML=ACHS.map(a=>`<div class="ach${a.ok(done,cfg)?' unl':''}"><div class="ach-ico">${a.ico}</div><div class="ach-n">${a.nm}</div><div class="ach-d">${a.desc}</div></div>`).join('');
-}
-function checkAch(){const d=tasks.filter(t=>t.done).length;ACHS.forEach(a=>{if(a.ok(d,cfg))toast(`🏆 ${a.nm}!`)})}
+function renderAch(done){document.getElementById('achGrid').innerHTML=ACHS.map(a=>`<div class="ach${a.ok(done,cfg)?' unl':''}"><div class="ach-i">${a.ico}</div><div class="ach-n">${a.nm}</div><div class="ach-d">${a.desc}</div></div>`).join('')}
+function checkAch(){const d=tasks.filter(t=>t.done).length;ACHS.forEach(a=>{if(a.ok(d,cfg))toast(`🏆 Achievement: ${a.nm}!`)})}
 
-// ============ PROFILE ============
-function renderProfStats(){
-  const done=tasks.filter(t=>t.done).length,total=tasks.length,pend=tasks.filter(t=>!t.done&&!t.canceled).length;
-  document.getElementById('profStats').innerHTML=`
-    <div class="psi"><div class="psi-n">${total}</div><div class="psi-l">Total</div></div>
-    <div class="psi"><div class="psi-n">${done}</div><div class="psi-l">Done</div></div>
-    <div class="psi"><div class="psi-n">${pend}</div><div class="psi-l">Pending</div></div>
-    <div class="psi"><div class="psi-n">${cfg.streak||1}</div><div class="psi-l">🔥 Streak</div></div>`;
+// ══════════════════════════════════════
+// PROFILE
+// ══════════════════════════════════════
+function renderProfSt(){
+  const d=tasks.filter(t=>t.done).length,n=tasks.length,p=tasks.filter(t=>!t.done&&!t.canceled).length;
+  document.getElementById('profSt').innerHTML=`
+    <div class="psi"><div class="psin">${n}</div><div class="psil">Total</div></div>
+    <div class="psi"><div class="psin">${d}</div><div class="psil">Done</div></div>
+    <div class="psi"><div class="psin">${p}</div><div class="psil">Pending</div></div>
+    <div class="psi"><div class="psin">${cfg.streak||1}</div><div class="psil">🔥 Streak</div></div>`;
 }
-function updateAvDisplay(){
-  const av=cfg.av||AVATARS()[0].url,nm=cfg.name||'User';
-  const html=`<img src="${av}" onerror="this.outerHTML='<span style=font-size:22px;font-weight:800>${nm[0].toUpperCase()}</span>'">`;
-  ['homeAv','profAv'].forEach(id=>{const el=document.getElementById(id);if(el)el.innerHTML=html});
+function updAvDisp(){
+  const av=cfg.av||AVS[0].url,nm=cfg.name||'User';
+  const h=`<img src="${av}" onerror="this.outerHTML='<span style=font-size:20px;font-weight:800>${nm[0].toUpperCase()}</span>'">`;
+  ['homeAv','profAv'].forEach(id=>{const e=document.getElementById(id);if(e)e.innerHTML=h});
   document.getElementById('profNm').textContent=nm;
   document.getElementById('profEm').textContent=cfg.email||'user@dayzy.app';
+  document.getElementById('hGreet').textContent=T('hi');
 }
 function openEditProf(){
-  editAv=cfg.av||AVATARS()[0].url;
+  editAv=cfg.av||AVS[0].url;
   document.getElementById('editNm').value=cfg.name||'';
   document.getElementById('editEm').value=cfg.email||'';
   renderEavPrev();
-  document.getElementById('avRow').innerHTML=AVATARS().map(a=>`<div class="av-opt${a.url===editAv?' sel':''}" onclick="pickAv('${a.url}')" title="${a.lbl}"><img src="${a.url}" onerror="this.style.display='none'"></div>`).join('');
+  document.getElementById('avRow').innerHTML=AVS.map(a=>`<div class="avopt${a.url===editAv?' on':''}" onclick="pickAv('${a.url}')" title="${a.l}"><img src="${a.url}" onerror="this.style.display='none'"></div>`).join('');
   document.getElementById('editProfOv').classList.add('on');
 }
-function renderEavPrev(){document.getElementById('eavPrev').innerHTML=`<img src="${editAv}" style="width:100%;height:100%;object-fit:contain;padding:7px">`}
-function pickAv(url){
-  editAv=url;
-  document.querySelectorAll('.av-opt').forEach(el=>{const img=el.querySelector('img');el.classList.toggle('sel',img&&img.src===url)});
-  renderEavPrev();
-}
-function cycleAv(){const urls=AVATARS().map(a=>a.url),i=urls.indexOf(editAv);pickAv(urls[(i+1)%urls.length])}
+function renderEavPrev(){document.getElementById('eavPrev').innerHTML=`<img src="${editAv}" style="width:100%;height:100%;object-fit:contain;padding:8px">`}
+function pickAv(url){editAv=url;document.querySelectorAll('.avopt').forEach(el=>{const img=el.querySelector('img');el.classList.toggle('on',img&&img.src===url)});renderEavPrev()}
+function cycleAv(){const u=AVS.map(a=>a.url),i=u.indexOf(editAv);pickAv(u[(i+1)%u.length])}
 function saveProf(){
   cfg.name=document.getElementById('editNm').value.trim()||'User';
   cfg.email=document.getElementById('editEm').value.trim();
-  cfg.av=editAv;save();updateAvDisplay();closeOvById('editProfOv');toast('✅ Profile saved!')
+  cfg.av=editAv;save();updAvDisp();closeOvId('editProfOv');toast('✅ Profile saved!');
 }
 function buildSwatches(){
-  const ACCS=[{id:'default',c:'#4f46e5'},{id:'purple',c:'#8b5cf6'},{id:'green',c:'#10b981'},{id:'orange',c:'#f59e0b'},{id:'pink',c:'#ec4899'},{id:'teal',c:'#14b8a6'},{id:'red',c:'#ef4444'}];
-  document.getElementById('swatches').innerHTML=ACCS.map(a=>`<div class="sw${cfg.accent===a.id?' sel':''}" style="background:${a.c}" onclick="setAccent('${a.id}')">${cfg.accent===a.id?'✓':''}</div>`).join('');
+  const A=[{id:'default',c:'#4f46e5'},{id:'purple',c:'#8b5cf6'},{id:'green',c:'#10b981'},{id:'orange',c:'#f59e0b'},{id:'pink',c:'#ec4899'},{id:'teal',c:'#14b8a6'},{id:'red',c:'#ef4444'}];
+  document.getElementById('swatches').innerHTML=A.map(a=>`<div class="sw${cfg.accent===a.id?' on':''}" style="background:${a.c}" onclick="setAccent('${a.id}')">${cfg.accent===a.id?'✓':''}</div>`).join('');
 }
 function setAccent(id){cfg.accent=id;save();document.documentElement.setAttribute('data-accent',id==='default'?'':id);buildSwatches();toast('🎨 Theme updated!')}
 function toggleTheme(){cfg.dark=!cfg.dark;save();document.documentElement.setAttribute('data-theme',cfg.dark?'dark':'');document.getElementById('darkTog').classList.toggle('on',cfg.dark)}
-function openLangModal(){
-  document.getElementById('langList').innerHTML=Object.entries(LANGS).map(([code,l])=>`
-    <div class="li${cfg.lang===code?' al':''}" onclick="setLang('${code}')">
-      <div class="li-l"><span class="li-f">${l.flag}</span><span class="li-n">${l.name}</span></div>
-      ${cfg.lang===code?'<span style="color:var(--p);font-weight:800">✓</span>':''}
+function openLang(){
+  document.getElementById('langList').innerHTML=Object.entries(LANGS).map(([c,l])=>`
+    <div class="li${cfg.lang===c?' on':''}" onclick="setLang('${c}')">
+      <div class="liL"><span class="lif">${l.flag}</span><span class="lin">${l.name}</span></div>
+      ${cfg.lang===c?'<span style="color:var(--p);font-weight:800">✓</span>':''}
     </div>`).join('');
   document.getElementById('langOv').classList.add('on');
 }
-function setLang(code){cfg.lang=code;save();document.getElementById('langBadge').textContent=code.toUpperCase();closeOvById('langOv');applyLang();renderTasks();renderStats()}
-function applyLang(){
-  const set=(id,k)=>{const e=document.getElementById(id);if(e)e.textContent=T(k)};
-  set('hGreet','hi');set('hSub','sub');set('myTaskL','myTask');set('todTaskL','todTask');set('viewAllL','viewAll');set('todProgL','todProg');
-  set('sl0','done');set('sl1','pending');set('sl2','canceled');set('sl3','ongoing');
-  set('statsT','stats');set('statsS','statsSub');set('weeklyL','weekly');
-  set('darkML','dm');set('langL','lang');set('pinLockL','pin');
-  set('nbl0','home');set('nbl1','calendar');set('nbl2','timer');set('nbl3','statsLbl');set('nbl4','profile');
-  const si=document.getElementById('searchInp');if(si)si.placeholder=T('pending');
-  updateAvDisplay();
-}
-function clearAll(){if(confirm('Clear all tasks?')){tasks=[];save();renderTasks();toast(T('cleared'))}}
+function setLang(c){cfg.lang=c;save();document.getElementById('langBadge').textContent=c.toUpperCase();closeOvId('langOv');updAvDisp();renderTasks();renderStats()}
+function clearAll(){if(confirm('Clear ALL tasks? This cannot be undone.')){tasks=[];save();renderTasks();toast('🗑 All tasks cleared')}}
 function exportData(){
-  const blob=new Blob([JSON.stringify({tasks,cfg},null,2)],{type:'application/json'});
-  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='dayzy-backup.json';a.click();toast('📤 Data exported!');
+  const b=new Blob([JSON.stringify({tasks,cfg},null,2)],{type:'application/json'});
+  const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='dayzy-backup.json';a.click();toast('📤 Backup downloaded!');
 }
 
-// ============ POMODORO ============
+// ══════════════════════════════════════
+// POMODORO
+// ══════════════════════════════════════
 function buildPomSel(){
   const sel=document.getElementById('pomSel'),today=ds(),arr=tasks.filter(t=>t.date===today&&!t.done&&!t.canceled);
-  sel.innerHTML='<option value="">-- Select Task --</option>'+arr.map(t=>`<option value="${t.id}">${t.name}</option>`).join('');
+  sel.innerHTML='<option value="">— Select Task —</option>'+arr.map(t=>`<option value="${t.id}">${t.name}</option>`).join('');
 }
-function pomPickTask(){const id=parseInt(document.getElementById('pomSel').value),tk=tasks.find(t=>t.id===id);document.getElementById('pomTN').textContent=tk?tk.name:'Select a task to focus on'}
+function pomPick(){const id=parseInt(document.getElementById('pomSel').value),tk=tasks.find(t=>t.id===id);document.getElementById('pomTN').textContent=tk?tk.name:'Select a task to focus on'}
 function setPomMode(mode,btn){
   pomMode=mode;pomOn=false;clearInterval(pomIv);document.getElementById('pomPlayBtn').textContent='▶';
   document.querySelectorAll('.pmb').forEach(b=>b.classList.remove('on'));btn.classList.add('on');
-  pomSec=POM[mode];pomTotal=pomSec;updatePomDisp();
+  pomSec=POM[mode];pomTotal=pomSec;updPomDisp();
   document.getElementById('pomLbl').textContent={focus:'FOCUS',short:'SHORT BREAK',long:'LONG BREAK'}[mode];
 }
 function pomToggle(){
@@ -1076,36 +1350,44 @@ function pomToggle(){
   else{
     pomOn=true;document.getElementById('pomPlayBtn').textContent='⏸';
     pomIv=setInterval(()=>{
-      pomSec--;updatePomDisp();
+      pomSec--;updPomDisp();
       if(pomSec<=0){
         clearInterval(pomIv);pomOn=false;document.getElementById('pomPlayBtn').textContent='▶';
-        if(pomMode==='focus'){pomDone++;cfg.pomSess=(cfg.pomSess||0)+1;cfg.focusMins=(cfg.focusMins||0)+25;save();buildPomDots();toast('🎉 Focus session done!')}
-        else toast('⏰ Break over!');
-        pomSec=POM[pomMode];pomTotal=pomSec;updatePomDisp();
+        if(pomMode==='focus'){pomDone++;cfg.pomSess=(cfg.pomSess||0)+1;cfg.focusMins=(cfg.focusMins||0)+25;save();buildPomDots();toast('🎉 Focus session complete!')}
+        else toast('⏰ Break over! Time to focus.');
+        pomSec=POM[pomMode];pomTotal=pomSec;updPomDisp();
       }
     },1000);
   }
 }
-function pomReset(){clearInterval(pomIv);pomOn=false;document.getElementById('pomPlayBtn').textContent='▶';pomSec=pomTotal;updatePomDisp()}
-function pomSkip(){clearInterval(pomIv);pomOn=false;document.getElementById('pomPlayBtn').textContent='▶';pomSec=0;updatePomDisp()}
-function updatePomDisp(){
+function pomReset(){clearInterval(pomIv);pomOn=false;document.getElementById('pomPlayBtn').textContent='▶';pomSec=pomTotal;updPomDisp()}
+function pomSkip(){clearInterval(pomIv);pomOn=false;document.getElementById('pomPlayBtn').textContent='▶';pomSec=0;updPomDisp()}
+function updPomDisp(){
   const m=Math.floor(pomSec/60).toString().padStart(2,'0'),s=(pomSec%60).toString().padStart(2,'0');
   document.getElementById('pomDisp').textContent=`${m}:${s}`;
-  document.getElementById('pomC').style.strokeDashoffset=552.9*(1-pomSec/pomTotal);
+  document.getElementById('pomC').style.strokeDashoffset=578.1*(1-pomSec/pomTotal);
 }
-function buildPomDots(){document.getElementById('pdots').innerHTML=[...Array(4)].map((_,i)=>`<div class="pdot${i<pomDone%4?' done':''}"></div>`).join('')}
+function buildPomDots(){document.getElementById('pomdots').innerHTML=[...Array(4)].map((_,i)=>`<div class="pdot${i<pomDone%4?' on':''}"></div>`).join('')}
 
-// ============ OVERLAYS ============
-function closeOv(e,id){if(e.target.classList.contains('ov'))closeOvById(id)}
-function closeOvById(id){document.getElementById(id).classList.remove('on')}
+// ══════════════════════════════════════
+// OVERLAYS
+// ══════════════════════════════════════
+function closeOv(e,id){if(e.target.classList.contains('ov'))closeOvId(id)}
+function closeOvId(id){document.getElementById(id).classList.remove('on')}
 
-// ============ TOAST ============
-function toast(msg){const el=document.getElementById('toast');el.textContent=msg;el.classList.add('on');setTimeout(()=>el.classList.remove('on'),2500)}
+// ══════════════════════════════════════
+// TOAST
+// ══════════════════════════════════════
+function toast(msg){const e=document.getElementById('toast');e.textContent=msg;e.classList.add('on');setTimeout(()=>e.classList.remove('on'),2500)}
 
-// ============ CLOCK ============
-function tickClock(){const n=new Date(),s=n.getHours().toString().padStart(2,'0')+':'+n.getMinutes().toString().padStart(2,'0');document.querySelectorAll('.sbar-t').forEach(e=>e.textContent=s)}
+// ══════════════════════════════════════
+// CLOCK
+// ══════════════════════════════════════
+function tickClock(){const n=new Date(),s=n.getHours().toString().padStart(2,'0')+':'+n.getMinutes().toString().padStart(2,'0');document.querySelectorAll('.sb-t').forEach(e=>e.textContent=s)}
 
-// ============ INIT ============
+// ══════════════════════════════════════
+// INIT
+// ══════════════════════════════════════
 (function init(){
   document.documentElement.setAttribute('data-theme',cfg.dark?'dark':'');
   document.documentElement.setAttribute('data-accent',cfg.accent&&cfg.accent!=='default'?cfg.accent:'');
@@ -1115,8 +1397,11 @@ function tickClock(){const n=new Date(),s=n.getHours().toString().padStart(2,'0'
   document.getElementById('tDate').value=ds();
   tickClock();setInterval(tickClock,30000);
   const now=new Date();calM=now.getMonth();calY=now.getFullYear();calSel=ds();
-  buildPomDots();applyLang();
-  if(cfg.pinOn)go('pinScr');else go('homeScr');
+  buildPomDots();updAvDisp();
+  // Route: first time → welcome, has PIN + pinOn → enter PIN, else → home
+  if(!cfg.setup){go('welcomeScr')}
+  else if(cfg.pinOn&&cfg.pin){go('pinScr')}
+  else{go('homeScr')}
 })();
 </script>
 </body>
