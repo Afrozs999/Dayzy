@@ -48,13 +48,13 @@
 [data-accent=purple]{--p:#8b5cf6;--pl:#a78bfa;--pdim:#ede9fe}
 [data-accent=red]{--p:#ef4444;--pl:#f87171;--pdim:#fee2e2}
 
-body{font-family:'Nunito',sans-serif;background:var(--bg);min-height:100vh;display:flex;justify-content:center;align-items:flex-start;padding:20px;transition:background .3s}
+body{font-family:'Nunito',sans-serif;background:var(--surface);min-height:100vh;margin:0;padding:0;transition:background .3s}
 
 /* ===================== PHONE ===================== */
-.phone{width:390px;min-height:844px;max-height:844px;background:var(--surface);border-radius:44px;overflow:hidden;box-shadow:0 40px 100px rgba(79,70,229,.18),0 0 0 6px rgba(129,140,248,.3);position:relative;display:flex;flex-direction:column;transition:background .3s}
+.phone{width:100%;min-height:100vh;max-height:100vh;background:var(--surface);border-radius:0;overflow:hidden;box-shadow:none;position:relative;display:flex;flex-direction:column;transition:background .3s}
 
 /* ===================== SCREENS ===================== */
-.screen{display:none;flex-direction:column;height:844px;overflow:hidden;animation:fadeIn .3s ease}
+.screen{display:none;flex-direction:column;height:100vh;overflow:hidden;animation:fadeIn .3s ease}
 .screen.active{display:flex}
 @keyframes fadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 .scroll-area{flex:1;overflow-y:auto;scrollbar-width:none}
@@ -324,7 +324,7 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);min-height:100vh;displ
 .pom-select:focus{border-color:var(--p)}
 
 /* ===================== MODALS / OVERLAYS ===================== */
-.overlay{display:none;position:absolute;inset:0;background:rgba(15,14,26,.55);z-index:200;align-items:flex-end;border-radius:44px;backdrop-filter:blur(3px)}
+.overlay{display:none;position:fixed;inset:0;background:rgba(15,14,26,.55);z-index:200;align-items:flex-end;border-radius:0;backdrop-filter:blur(3px)}
 .overlay.open{display:flex}
 .mbox{background:var(--surface);border-radius:28px 28px 0 0;padding:22px 22px 44px;width:100%;animation:slideUp .3s ease;max-height:75vh;overflow-y:auto}
 @keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
@@ -372,7 +372,7 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);min-height:100vh;displ
 .emo-opt.sel{border-color:var(--p);background:var(--pdim);transform:scale(1.08);box-shadow:0 4px 14px rgba(79,70,229,.25)}
 
 /* ===================== TOAST ===================== */
-.toast{position:absolute;top:60px;left:50%;transform:translateX(-50%) translateY(-8px);background:#1a1340;color:#fff;padding:10px 18px;border-radius:12px;font-size:13px;font-weight:700;white-space:nowrap;z-index:300;opacity:0;transition:all .3s;pointer-events:none}
+.toast{position:fixed;top:60px;left:50%;transform:translateX(-50%) translateY(-8px);background:#1a1340;color:#fff;padding:10px 18px;border-radius:12px;font-size:13px;font-weight:700;white-space:nowrap;z-index:300;opacity:0;transition:all .3s;pointer-events:none}
 [data-theme=dark] .toast{background:#e0e7ff;color:#1a1340}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0);top:70px}
 
@@ -536,7 +536,7 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);min-height:100vh;displ
       <div class="prof-edit-icon" onclick="openEditProfile()">✏️</div>
     </div>
     <div class="prof-name" id="profName">Steven</div>
-    <div class="prof-email" id="profEmail">steven@dayzy.app</div>
+    <div class="prof-email" id="profEmail"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="b6c5c2d3c0d3d8f6d2d7cfcccf98d7c6c6">[email&#160;protected]</a></div>
     <div class="prof-stats-row" id="profStatsRow"></div>
   </div>
   <div class="scroll-area">
@@ -698,7 +698,7 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);min-height:100vh;displ
 
 </div><!-- /phone -->
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 // ========================================================
 // DATA LAYER — LocalStorage
 // ========================================================
@@ -1367,14 +1367,4 @@ function init(){
   updateClock(); setInterval(updateClock,30000);
   buildDates();
   buildPomSessions();
-  const now=new Date(); calMonth=now.getMonth(); calYear=now.getFullYear(); calSelDate=ds();
-  applyLang();
-  updateAvatarDisplay();
-  buildSwatches();
-  if(settings.pinEnabled){ goTo('pinScreen'); } else { goTo('homeScreen'); }
-}
-
-init();
-</script>
-</body>
-</html>
+  const now=new Date(); calMonth=now.ge
