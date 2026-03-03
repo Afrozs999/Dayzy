@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-<title>Dailoz v3</title>
+<title>DayZy — Daily Task Manager</title>
+<link rel="icon" type="image/png" href="https://i.ibb.co/xS57LdJY/Chat-GPT-Image-Mar-3-2026-03-02-55-PM-Photoroom.png">
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800;900&family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
@@ -388,7 +389,10 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);min-height:100vh;displ
 <!-- =================== PIN SCREEN =================== -->
 <div class="screen" id="pinScreen">
   <div style="margin-bottom:16px;text-align:center">
-    <div class="pin-logo">Dailoz<span>.</span></div>
+    <div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:6px">
+      <img src="https://i.ibb.co/xS57LdJY/Chat-GPT-Image-Mar-3-2026-03-02-55-PM-Photoroom.png" style="width:44px;height:44px;object-fit:contain;border-radius:12px">
+      <div class="pin-logo">DayZy<span>.</span></div>
+    </div>
     <div class="pin-sub" id="pinSub">Enter your PIN to continue</div>
   </div>
   <div class="pin-dots" id="pinDots"><div class="pin-dot" id="pd0"></div><div class="pin-dot" id="pd1"></div><div class="pin-dot" id="pd2"></div><div class="pin-dot" id="pd3"></div></div>
@@ -522,13 +526,17 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);min-height:100vh;displ
 <!-- =================== PROFILE SCREEN =================== -->
 <div class="screen" id="profileScreen">
   <div class="prof-hdr">
-    <div class="sbar" style="padding:0 0 12px;background:transparent"><span class="sbar-time" style="color:rgba(255,255,255,.8)">9:41</span><span class="sbar-icons" style="color:rgba(255,255,255,.6)">●●● 📶 🔋</span></div>
+    <div class="sbar" style="padding:0 0 8px;background:transparent"><span class="sbar-time" style="color:rgba(255,255,255,.8)">9:41</span><span class="sbar-icons" style="color:rgba(255,255,255,.6)">●●● 📶 🔋</span></div>
+    <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:16px">
+      <img src="https://i.ibb.co/xS57LdJY/Chat-GPT-Image-Mar-3-2026-03-02-55-PM-Photoroom.png" style="width:28px;height:28px;object-fit:contain;border-radius:7px;background:rgba(255,255,255,.25);padding:3px">
+      <span style="font-family:'Poppins',sans-serif;font-size:20px;font-weight:800;color:white;letter-spacing:-0.5px">DayZy<span style="color:rgba(255,255,255,.55)">.</span></span>
+    </div>
     <div class="prof-avatar-wrap">
       <div class="prof-avatar" id="profAvatarDisplay" onclick="openEditProfile()"></div>
       <div class="prof-edit-icon" onclick="openEditProfile()">✏️</div>
     </div>
     <div class="prof-name" id="profName">Steven</div>
-    <div class="prof-email" id="profEmail">steven@dailoz.app</div>
+    <div class="prof-email" id="profEmail">steven@dayzy.app</div>
     <div class="prof-stats-row" id="profStatsRow"></div>
   </div>
   <div class="scroll-area">
@@ -574,7 +582,7 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);min-height:100vh;displ
           <div class="sright" style="color:var(--red)">›</div>
         </div>
       </div>
-      <div style="text-align:center;color:var(--subtext);font-size:12px;padding:8px 0 24px">Dailoz v3.0 • Made with ❤️</div>
+      <div style="text-align:center;color:var(--subtext);font-size:12px;padding:8px 0 24px">DayZy v3.0 • Made with ❤️</div>
     </div>
   </div>
   <div class="bnav">
@@ -707,7 +715,7 @@ let tasks = LS.get('tasks', [
   {id:4,name:'Team Standup',date:ds(),start:'10:00',end:'10:30',cat:'work',prio:'medium',notes:'Daily scrum',done:false,canceled:false,recur:'daily',subtasks:[]},
   {id:5,name:'Read 20 Pages',date:ds(),start:'21:00',end:'21:30',cat:'study',prio:'low',notes:'Atomic Habits',done:false,canceled:false,recur:'daily',subtasks:[]},
 ]);
-let settings = LS.get('settings', {dark:false,pin:'1234',pinEnabled:true,lang:'en',accent:'default',name:'Steven',email:'steven@dailoz.app',avatar:'https://i.ibb.co/Q7rK88j6/Adult-Boy-Icon-Dayzy.png',pomSessions:0,totalFocusMins:0,streak:1});
+let settings = LS.get('settings', {dark:false,pin:'1234',pinEnabled:true,lang:'en',accent:'default',name:'Steven',email:'steven@dayzy.app',avatar:'https://i.ibb.co/Q7rK88j6/Adult-Boy-Icon-Dayzy.png',pomSessions:0,totalFocusMins:0,streak:1});
 let nextId = LS.get('nextId', 10);
 let nextSubId = 10;
 let selectedTaskId = null;
@@ -1206,7 +1214,7 @@ function exportData(){
   const data=JSON.stringify({tasks,settings},null,2);
   const blob=new Blob([data],{type:'application/json'});
   const url=URL.createObjectURL(blob);
-  const a=document.createElement('a'); a.href=url; a.download='dailoz-backup.json'; a.click();
+  const a=document.createElement('a'); a.href=url; a.download='dayzy-backup.json'; a.click();
   showToast('📤 Data exported!');
 }
 
@@ -1225,7 +1233,7 @@ function updateAvatarDisplay(){
     el.innerHTML=makeAvHTML();
   });
   document.getElementById('profName').textContent=name;
-  document.getElementById('profEmail').textContent=settings.email||'user@dailoz.app';
+  document.getElementById('profEmail').textContent=settings.email||'user@dayzy.app';
 }
 function renderProfileStats(){
   const done=tasks.filter(t=>t.done).length;
